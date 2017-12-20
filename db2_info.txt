@@ -1,0 +1,55 @@
+#10.8.253.181
+lscfg -vpl fcs0
+C0507608C4320000
+lscfg -vpl fsc1
+C0507608C4320002
+
+#10.8.253.201
+lscfg -vpl fcs0
+C0507608C4370000
+lscfg -vpl fsc1
+C0507608C4370002
+
+
+rmdev -l hdisk2 -dR
+
+lspv
+cfgmgr -v
+
+chdev -l fscsi0 -a dyntrk=yes -P
+chdev -l fscsi1 -a dyntrk=yes -P
+chdev -l fscsi0 -a fc_err_recov=fast_fail -P
+chdev -l fscsi1 -a fc_err_recov=fast_fail -P
+
+chdev -l hdisk2 -a queue_depth=40 -P
+chdev -l hdisk2 -a hcheck_interval=60 -P
+chdev -l hdisk3 -a queue_depth=40 -P
+chdev -l hdisk3 -a hcheck_interval=60 -P
+
+chdev -l hdisk2 -a pv=yes
+chdev -l hdisk3 -a pv=yes
+
+
+
+
+/usr/sbin/rsct/bin/dhb_read -p hdisk2 -r
+/usr/sbin/rsct/bin/dhb_read -p hdisk2 -t
+ 
+
+db2 update dbm cfg using DFT_MON_BUFPOOL on DFT_MON_LOCK on DFT_MON_SORT on DFT_MON_STMT on DFT_MON_TABLE on DFT_MON_TIMESTAMP on DFT_MON_UOW on
+
+/dev/rcard_ix06_01
+/dev/rcard_ix06_02
+
+db2 connect to carddb
+db2 "alter tablespace IDXSP06 resize(device '/dev/rcard_ix06_01' 23040M,device '/dev/rcard_ix06_02' 23040M)"
+
+错误信息：The DB2 installer detected that an RSCT peer domain is online.  Bring the peer 
+domain offline in order to allow the DB2 installer to update the TSA 
+installation.
+
+1)停止HA的resorce服务
+执行rmcctrl -z
+2)或者db2_install -f NOTSAMP
+
+

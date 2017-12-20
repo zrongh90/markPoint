@@ -1,0 +1,57 @@
+# For advice on how to change settings please see
+# http://dev.mysql.com/doc/refman/5.7/en/server-configuration-defaults.html
+
+[mysqld]
+#
+# Remove leading # and set to the amount of RAM for the most important data
+# cache in MySQL. Start at 70% of total RAM for dedicated server, else 10%.
+#
+# Remove leading # to turn on a very important data integrity option: logging
+# changes to the binary log between backups.
+# log_bin
+#
+# Remove leading # to set options mainly useful for reporting servers.
+# The server defaults are faster for transactions and fast SELECTs.
+# Adjust sizes as needed, experiment to find the optimal values.
+# join_buffer_size = 128M
+# sort_buffer_size = 2M
+# read_rnd_buffer_size = 2M
+server_id=2
+pid-file=/home/mysql/mysqld.pid
+basedir=/home/mysql
+datadir=/home/mysql/datatbs
+socket=/var/lib/mysql/mysql.sock
+
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+
+log-error=/home/mysql/logs/error_log/mysqld.log
+
+slow_query_log=ON  #打开慢日志记录
+slow_query_log_file=/home/mysql/logs/mysql-slow.log #慢日志位置
+long_query_time=5  #慢日志记录条件,示例为5S
+
+log-bin=/home/mysql/logs/bin_log/mysql-bin #mysql二进制日志名称
+max-binlog-size=256M #binlog大小设置
+expire_logs_days=2 #日志过期时间，需要触发log flush才会删除（触发条件为：1、重启；2、binlog文件大小达到max_binlog_size限制；3、手工执行flush log命令）
+sync_binlog=1 #0：mysql不做磁盘同步操作，让文件系统做同步；n：每进行n次事务提交后，mysql进行一次sync磁盘同步。
+
+max_connections = 2000 #数据库最大连接数
+sort_buffer_size=6M    #针对每个连接
+read_buffer_size=4M    #针对每个连接
+join_buffer_size=8M    #针对每个连接
+key_buffer_size=512M
+
+
+innodb_buffer_pool_size=2G     #缓冲池大小
+innodb_buffer_pool_instances=3 #缓冲池数目为3
+innodb_file_per_table=ON #每张表一个表空间，如果选择OFF，则所有表空间建立在ibdata1这个表空间上
+#innodb_data_file_path=ibdata1:12M:autoextend
+innodb_log_file_size=512M #引擎日志，非数据库日志
+innodb_log_buffer_size=16M
+innodb_thread_concurrency=16    #根据CPU设置，有多少个cpu就设置多少个
+innodb_flush_log_at_trx_commit=2 #参数可选为0,1,2；0：log buffer每秒将日志buffer写入日志文件并刷新到磁盘一次；1：每次事务提交将log buffer的数据写入log file，并且flush到磁盘；2：每次事务提交时mysql会把log buffer的数据写入log file，但是每秒执行一次flush操作。
+innodb_thread_concurrency=16
+innodb_flush_method=O_DIRECT
+innodb_read_io_threads=8
+innodb_write_io_threads=8

@@ -1,0 +1,26 @@
+[drcbank_rhel7]
+11.8.8.137
+11.8.8.138
+11.8.8.139
+192.168.4.29
+192.168.4.30
+
+[drcbank:children]
+drcbank_rhel6
+
+
+[ntps-1]
+192.168.4.29
+192.168.4.30
+
+[ntps-2]
+11.8.8.137
+11.8.8.138
+11.8.8.139
+
+[ntps:children]
+ntps-1
+ntps-2
+
+[server]
+local ansible_connection=local

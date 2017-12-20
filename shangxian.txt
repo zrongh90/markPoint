@@ -1,0 +1,54 @@
+1、rootvg镜像
+10.8.251.109/129
+smitty mirrorvg  ->  rootvg  -> backgroup (pvname hdisk0,hdisk1)
+extendvg rootvg hdisk1 
+bootlist -m normal -o
+bosboot -ad /dev/hdisk1
+bootlist -m normal hdisk0 hdisk1
+
+
+2、光纤交换机zone划分
+10.8.251.109
+lscfg -vpl fcs0
+C0507608C4360084
+lscfg -vpl fcs1
+C0507608C4:36:00:86
+
+10.8.251.129
+lscfg -vpl fcs0
+C0507608C4:3A:00:40
+lscfg -vpl fcs1
+C0507608C4:3A:00:42
+
+alias
+zone
+save config
+enable config
+
+vg划分
+
+hacmp搭建
+chdev -l fscsi0 -a dyntrk=yes -P
+chdev -l fscsi1 -a dyntrk=yes -P
+chdev -l fscsi0 -a fc_err_recov=fast_fail -P
+chdev -l fscsi1 -a fc_err_recov=fast_fail -P
+
+chdev -l hdisk2 -a queue_depth=40 -P
+chdev -l hdisk2 -a hcheck_interval=60 -P
+chdev -l hdisk3 -a queue_depth=40 -P
+chdev -l hdisk3 -a hcheck_interval=60 -P
+
+chdev -l hdisk2 -a pv=yes
+chdev -l hdisk3 -a pv=yes
+
+/etc/hosts添加ip信息
+/etc/cluster/rhosts
+生产网卡添加bootip
+
+添加ha脚本
+配置服务IP
+配置磁盘心跳
+/usr/sbin/rsct/bin/dhb_read -p hdisk2 -r
+/usr/sbin/rsct/bin/dhb_read -p hdisk2 -t
+创建共享VG
+配置资源组，将服务IP、网络心跳、磁盘心跳添加到资源组

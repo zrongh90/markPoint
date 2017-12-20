@@ -1,0 +1,12 @@
+20161222
+AIX61及AIX71
+1)修改/etc/ssh/sshd_config文件，打开PermitRootLogin no并重启sshd服务
+2)在/etc/profile文件中添加set -o vi
+3)HA在AIX6.1及7.1模板中升级为升级为7.1.3.6
+4)修改tmpusr默认密码为DRC1bank
+5)aix安装python及sudo、unzip,在AIX61安装python通过--nodeps跳过libssl及libcrypto的验证
+6）修改/etc/snmpdv3.conf中的文件
+a)添加VACM_VIEW defaultView           1.3.6.1.4.1.2.3.1.2.1.5     - included -
+b)去掉#VACM_VIEW defaultView            internet               - included -  的#号
+c)去掉#COMMUNITY public    public     noAuthNoPriv 0.0.0.0     0.0.0.0   -的#号
+7)修改模板虚拟内存为16G

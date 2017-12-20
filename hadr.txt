@@ -1,0 +1,141 @@
+
+备份
+db2 connect to wzdb
+db2 update db cfg for wzdb using LOGFILSIZ 40000;
+db2 update db cfg for wzdb using LOGSECOND 100;
+db2 update db cfg for wzdb using LOGPRIMARY 100
+db2 update db cfg for wzdb using LOGARCHMETH1 DISK:/db2log
+db2 backup db wzdb to /dev/null
+
+
+db2 backup db wzdb online to /tmp/
+
+恢复
+db2 restore db wzdb from "/tmp" taken at 20161014095407 replace history file without prompting
+
+
+
+HADR端口不能为SVCENAME端口或SVCENAME端口+1
+HADR主机配置
+db2 update db cfg for wzdb using HADR_LOCAL_HOST	10.8.24.68  
+db2 update db cfg for wzdb using HADR_LOCAL_SVC    DB2_wzdb_hadr_1
+db2 update db cfg for wzdb using HADR_REMOTE_HOST  10.8.24.69  
+db2 update db cfg for wzdb using HADR_REMOTE_SVC   DB2_wzdb_hadr_2
+db2 update db cfg for wzdb using HADR_REMOTE_INST  wzinst  
+db2 update db cfg for wzdb using HADR_TIMEOUT      120    
+db2 update db cfg for wzdb using HADR_SYNCMODE     async    
+db2 update db cfg for wzdb using LOGINDEXBUILD     on
+db2 update db cfg for wzdb using BLOCKNONLOGGED	yes
+db2 connect to wzdb
+db2 quiesce database immediate force connections
+db2 unquiesce database
+db2 connect reset
+
+                      
+HADR备机配置          
+db2 update db cfg for wzdb using HADR_LOCAL_HOST   10.8.24.69 
+db2 update db cfg for wzdb using HADR_LOCAL_SVC    DB2_wzdb_hadr_2
+db2 update db cfg for wzdb using HADR_REMOTE_HOST  10.8.24.68  
+db2 update db cfg for wzdb using HADR_REMOTE_SVC   DB2_wzdb_hadr_1
+db2 update db cfg for wzdb using HADR_REMOTE_INST  wzinst  
+db2 update db cfg for wzdb using HADR_TIMEOUT      120    
+db2 update db cfg for wzdb using HADR_SYNCMODE     async    
+db2 update db cfg for wzdb using LOGINDEXBUILD     on
+db2 update db cfg for wzdb using BLOCKNONLOGGED	yes
+
+
+
+
+
+
+
+配置自动路由(暂时不用配置，通过)
+主机
+db2 update alternate server for database wzdb using HOSTNAME 10.8.24.68 port 60012
+备机
+db2 update alternate server for database wzdb using HOSTNAME 10.8.24.69 port 60012
+
+
+启动
+备机
+db2 deactivate db wzdb
+db2 start hadr on db wzdb as standby
+
+主机
+db2 deactivate db wzdb
+db2 start hadr on db wzdb as primary
+
+hacmp情况下，修改ha脚本：
+db2 start hadr on db wzdb as primary by force
+
+
+切换
+db2 takeover hadr on db wzdb
+
+
+
+
+
+场景
+1、主库在主机房，备机手工takeover		通过
+
+2、主库在主机房，主机房powerHA手动切换 通过
+
+3、主库在主机房，hmc中断电powerHA切换		通过
+
+4、主库在主机房，主机房HA两台主机接连宕机
+1)通过takeover by force 强制备库接管
+2)主机房启动两台主机，并启动HA保护
+2)主机房的备库执行 db2 deactivate db wzdb
+3)主机房的备库执行 db2 start hadr on db wzdb as standby
+
+5、主库在主机房，备机宕机
+1)启动备机后，执行 db2 deactivate db wzdb
+2)备机上的备库，执行	db2 start hadr on db wzdb as standby
+
+6、备机网络故障
+1)在超时时间结束后，数据库操作成功
+2)HADR状态变为disconnect
+3)备机网络恢复后HADR状态自动恢复
+
+7、主机网络故障
+
+8、停止数据库（切忌不可通过 db2 stop hadr on db sampl,这样会导致hadr的角色丢失，无法自动重建关系）
+在主备机上分别执行下面命令
+1)db2 deactivate db wzdb
+2)db2stop
+如果无法正常结束，通过下面命令
+db2stop force
+再无法结束  
+db2kill
+
+9、启动数据库
+在备机上执行：
+1)db2start
+2)db2 start hadr on db wzdb as standby
+在主机上执行：
+3)db2start
+4)db2 start hadr on db wzdb as primary
+
+10、hadr切换注意
+1）不断绝对必要地情况下，不可使用db2 takeover hadr on db wzdb，这样会导致两个数据库都是primary状态，导致脑裂
+
+
+
+问题：
+HADR 120S timeout的意义
+网络断，主机房发生hadr切换
+
+
+注意事项：
+1、HADR启动
+正常情况下启动HADR，必须先启动Standby，再启动Primary
+非正常情况（Standby坏掉了，或者网络问题），可以通过start hadr on db xxx as primary by force先把Primary的DB激活，HA脚本可能需要考虑这个部分。
+ 
+2、HADR切换
+正常情况下请使用takeover切换，如果确实需要by force进行切换，请最好咨询下IBM相关人员。
+ 
+3、JDBC配置
+修改连接字符串之后需要重启应用以让应用读取新的连接字符串(一定要加最后分号)
+jdbc:db2://10.232.128.71:50000/FH01C4AB为
+jdbc:db2://10.232.128.71:50000/FH01C4AB:clientRerouteAlternateServerName=10.232.128.70;clientRerouteAlternatePortNumber=12010;
