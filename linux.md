@@ -1,12 +1,13 @@
 1、`whatis`快速查出命令的用途
-   `whereis` 快速定位命令的位置
+ 
+`whereis` 快速定位命令的位置
 
 2、`basename` - strip directory and suffix from filenames
-	`dirname` - strip non-directory suffix from file name
+`dirname` - strip non-directory suffix from file name
 
 3、linux下可以尝试用`vdir`命令提供ls -l
 
-4、不推荐使用sh scriptname来执行脚本，因为这禁用了脚本从stdin中读取数据的功能
+4、不推荐使用`sh scriptname`来执行脚本，因为这禁用了脚本从stdin中读取数据的功能
 
 5、'STRING'将会阻止STRING中所有特殊字符的解释
 
@@ -23,7 +24,7 @@
 	Array=(element1 element2 element3)
 ```
 
-8、使用a=$(echo test)机制来进行变量赋值(这是一种比后置引用(反引号a=`echo test`)更新的一种方法).
+8、使用`a=$(echo test)`机制来进行变量赋值(这是一种比后置引用(反引号`` a=`echo test` ``)更新的一种方法).
 
 9、Bash变量不区分类型，关键因素是变量值是否只有数字
 
