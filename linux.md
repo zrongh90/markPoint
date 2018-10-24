@@ -82,19 +82,27 @@
 ```
 
 20、用户增加sudo权限（推荐在/etc/sudoers.d中增加一个文件）
+
 <授权用户> <主机列表>=<runas用户> <参数（例如NOPASSWD)> <命令>
+
 例如 tmpusr ALL=(ALL) /usr/bin/sysdumpdev   #运行tmpusr用户以任意用户执行sysdumpdev
 
 21、使用iperf测试网络速度
+
 	1）在两台主机安装iperf的rpm包
+
 	2）服务端启动：iperf -s ;客户端连接iperf -c X.X.X.X -t 60 -i 1
+
 	(其中-s指定启动服务器程序；-c指定服务端IP；-t指定时间间隔；-i指定结果返回时间；-u测试UDP模式)
 
 22、进程问题分析思路
+
 	1）ps aux 查看系统进程的状态（STAT）：（S睡眠、R运行、D不可中断睡眠，等待输入或输出完成、T停止、Z僵尸进程）
+
 	2）查看/proc/pid***/stack（栈）和/proc/pid***/fd（文件描述符）、lsof -p pid***、/var/log/dmesg或messages看系统日志
 
 23、top中进程的信息
+
 	VIRT：进程使用的虚拟内存总量
 	RES：进程在使用的、未被换出的物理内存大小
 	SHR：共享内存的大小
@@ -109,6 +117,7 @@
 	8）键盘o：改变列显示的位置
 	
 24、用户管理：
+
 	useradd默认参数主要涉及/etc/login.defs和/etc/default/useradd。
 	默认的用户ID及组ID内容可以参考/usr/share/doc/setup-2.8.14/uidgid文件
 	文件内容：
@@ -120,16 +129,22 @@
 25、lslogins查看用户的登录信息，可以显示所有用户，也可以指定用户,定义输出内容
 
 26、修改wheel组中的用户及/etc/pam.d/su可以控制哪些用户可以使用su命令，哪些用户可以不用密码授权进行su
+
 	# Uncomment the following line to implicitly trust users in the "wheel" group.
 	#auth		sufficient	pam_wheel.so trust use_uid
 	# Uncomment the following line to require a user to be in the "wheel" group.
 	#auth		required	pam_wheel.so use_uid
 
-27、repoquery --list package_name 可以列出软件包下包括的文件，yum provides "file_name" 可以列出文件属于repo库中的哪package
+27、repoquery --list package_name 
 
-28、lspci查看PCI硬件信息；lscpu查看CPU硬件信息；lsblk查看块设备信息；findmnt查看文件系统挂载信息
+可以列出软件包下包括的文件，yum provides "file_name" 可以列出文件属于repo库中的哪package
+
+28、lspci查看PCI硬件信息
+
+lscpu查看CPU硬件信息；lsblk查看块设备信息；findmnt查看文件系统挂载信息
 
 29、用户超时时间/etc/profile的TMOUT参数；
+
     密码及锁定策略/etc/pam.d/system-auth
 	auth模块：身份识别
 	auth        required      pam_tally2.so    onerr=fail deny=5 unlock_time=300 even_deny_root root_unlock_time=300
@@ -140,38 +155,44 @@
 30、切记~/.ssh/authorized_keys文件的权限会影响是否可以通过密钥连接，目标权限为0600
 
 31、sysctl：可以修改正在运行中的linux系统接口，包括tcp/ip堆栈和虚拟内存系统的选项
+
 	sysctl -a 列出当前生效的值
 	sysctl -w kernel.hostname="test" 临时修改系统参数配置
 	修改/etc/sysctl.conf文件 永久修改系统参数设置
 	
 32、tcpip的接受发送buffer
-		sysctl -a 							/proc                           
-	net.ipv4.tcp_rmem				/proc/sys/net/ipv4/tcp_rmem
+
+sysctl -a
+/proc/net.ipv4.tcp_rmem				/proc/sys/net/ipv4/tcp_rmem
 	net.ipv4.tcp_wmem				/proc/sys/net/ipv4/tcp_wmem
 	net.ipv4.tcp_mem				/proc/sys/net/ipv4/tcp_mem
 	
 33、通过yum环境确定需要安装的rpm包的依赖关系
+
 	1)yum deplist rpm_name     #查询rpm所需依赖包
 	2)yumdownloader rpm_name   #下载目标rpm包
-   [tmpusr@ansible ~]$ yum deplist gcc-c++.x86_64 | grep provider | uniq | grep -v i686
-   provider: bash.x86_64 4.2.46-21.el7_3
-   provider: info.x86_64 5.1-4.el7
-   provider: binutils.x86_64 2.25.1-22.base.el7
-   provider: cpp.x86_64 4.8.5-11.el7
-   provider: glibc-devel.x86_64 2.17-157.el7_3.1
-   provider: glibc.x86_64 2.17-157.el7_3.1
-   provider: libgcc.x86_64 4.8.5-11.el7
-   provider: libgcc.x86_64 4.8.5-11.el7
-   provider: gmp.x86_64 1:6.0.0-12.el7_1
-   provider: libgomp.x86_64 4.8.5-11.el7
-   provider: libgomp.x86_64 4.8.5-11.el7
-   provider: glibc.x86_64 2.17-157.el7_3.1
-   provider: libmpc.x86_64 1.0.1-3.el7
-   provider: mpfr.x86_64 3.1.1-4.el7
-   provider: zlib.x86_64 1.2.7-17.el7
-   provider: glibc.x86_64 2.17-157.el7_3.1
+```shell
+[tmpusr@ansible ~]$ yum deplist gcc-c++.x86_64 | grep provider | uniq | grep -v i686
+	provider: bash.x86_64 4.2.46-21.el7_3
+	provider: info.x86_64 5.1-4.el7
+	provider: binutils.x86_64 2.25.1-22.base.el7
+	provider: cpp.x86_64 4.8.5-11.el7
+	provider: glibc-devel.x86_64 2.17-157.el7_3.1
+	provider: glibc.x86_64 2.17-157.el7_3.1
+	provider: libgcc.x86_64 4.8.5-11.el7
+	provider: libgcc.x86_64 4.8.5-11.el7
+	provider: gmp.x86_64 1:6.0.0-12.el7_1
+	provider: libgomp.x86_64 4.8.5-11.el7
+	provider: libgomp.x86_64 4.8.5-11.el7
+	provider: glibc.x86_64 2.17-157.el7_3.1
+	provider: libmpc.x86_64 1.0.1-3.el7
+	provider: mpfr.x86_64 3.1.1-4.el7
+	provider: zlib.x86_64 1.2.7-17.el7
+	provider: glibc.x86_64 2.17-157.el7_3.1
+```
 
 34、/etc/security/limits.conf限制了用户的可使用资源，修改用户的打开文件资源限制。
+
 	1)修改/etc/security/limits.conf的nofile
 	2)打开文件限制设置值参考/proc/sys/fs/file-max
 	3)用户的ulimit设置值不能大于limits.conf文件中的限制。(例如root:ulimit -u为5000；tmpusr无法通过ulimit -u 5001)
@@ -179,16 +200,20 @@
 35、进入单用户模式，在grub节修改kernel行，在末尾添加single
 
 36、启动图形界面
-	AIX: 执行/etc/rc.dt
-	linux: 1）修改/etc/gdm/customer.conf：在[xdcmp]下增加Port=177和Enable=1
-	       2）修改root的.bash_profile添加export DISPLAY=X.X.X.X:0.0
-		   3）重启runlevel 3和5（即init 3; init 5。注意重启runlevel对应用的影响）
+
+	AIX: 
+	执行/etc/rc.dt
+	linux: 
+	1）修改/etc/gdm/customer.conf：在[xdcmp]下增加Port=177和Enable=1 
+	2）修改root的.bash_profile添加export DISPLAY=X.X.X.X:0.0
+	3）重启runlevel 3和5（即init 3; init 5。注意重启runlevel对应用的影响）
 		   
 37、iostat分析
 
 38、vmstat分析
 
 39、通过uptime分析系统负载,平均负载指特定时间间隔内运行队列中的平均进程数。
+
 	$ uptime
 	09:22AM   up 251 days,  14:03,  3 users,  load average: 2.61, 1.99, 2.50
 	                                                       1分钟  5分钟  15分钟
@@ -197,6 +222,7 @@
     上述系统为8C，所有平均负载不大于3*8=24表明系统性能良好
 
 40、使用rsync进行数据的同步，一般使用-auv参数。
+
     1）使用rsync SRC DEST，进行本地数据的拷贝
 	2）使用rsync SRC [USER@]host:DEST 或 rsync [USER@]host:SRC DEST，进行远程数据的拷贝
 	-a: 等于-rlptgoD，-r递归,-l保留软链接,-p保留文件权限,-t保留时间信息,-g保留组信息,-o保留用户信息,-D保留设备文件信息
