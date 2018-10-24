@@ -8,3 +8,4 @@ my work mark
 
 ### :computer: linux
 - [linux](https://github.com/zrongh90/markPoint/blob/master/linux.md)
+- [性能分析思路](https://github.com/zrongh90/markPoint/blob/master/perform_analysis.md)
