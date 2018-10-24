@@ -180,6 +180,7 @@ net.ipv4.tcp_mem				/proc/sys/net/ipv4/tcp_mem
 33、通过yum环境确定需要安装的rpm包的依赖关系
 
 1)yum deplist rpm_name     #查询rpm所需依赖包
+
 2)yumdownloader rpm_name   #下载目标rpm包
 
 ```shell
@@ -204,23 +205,25 @@ net.ipv4.tcp_mem				/proc/sys/net/ipv4/tcp_mem
 
 34、/etc/security/limits.conf限制了用户的可使用资源，修改用户的打开文件资源限制。
 
-1)修改/etc/security/limits.conf的nofile
+1. 修改/etc/security/limits.conf的nofile
 
-2)打开文件限制设置值参考/proc/sys/fs/file-max
+2. 打开文件限制设置值参考/proc/sys/fs/file-max
 
-3)用户的ulimit设置值不能大于limits.conf文件中的限制。
+3. 用户的ulimit设置值不能大于limits.conf文件中的限制。
 (例如root:ulimit -u为5000；tmpusr无法通过ulimit -u 5001)
-	
+
 35、进入单用户模式，在grub节修改kernel行，在末尾添加single
 
 36、启动图形界面
 
-AIX: 
+1. AIX
+
 	执行/etc/rc.dt
-linux: 
-	1）修改/etc/gdm/customer.conf：在[xdcmp]下增加Port=177和Enable=1 
-	2）修改root的.bash_profile添加export DISPLAY=X.X.X.X:0.0
-	3）重启runlevel 3和5（即init 3; init 5。注意重启runlevel对应用的影响）
+
+2. linux 
+	1. 修改/etc/gdm/customer.conf：在[xdcmp]下增加Port=177和Enable=1 
+	2. 修改root的.bash_profile添加export DISPLAY=X.X.X.X:0.0
+	3. 重启runlevel 3和5（即init 3; init 5。注意重启runlevel对应用的影响）
 		   
 37、iostat分析
 
@@ -237,9 +240,9 @@ linux:
 
 40、使用rsync进行数据的同步，一般使用-auv参数。
 
-1）使用rsync SRC DEST，进行本地数据的拷贝
+1. 使用rsync SRC DEST，进行本地数据的拷贝
 
-2）使用rsync SRC [USER@]host:DEST 或 rsync [USER@]host:SRC DEST，进行远程数据的拷贝
+2. 使用rsync SRC [USER@]host:DEST 或 rsync [USER@]host:SRC DEST，进行远程数据的拷贝
 
 	-a: 等于-rlptgoD，-r递归,-l保留软链接,-p保留文件权限,-t保留时间信息,-g保留组信息,-o保留用户信息,-D保留设备文件信息
 	-u, --update：仅仅更新数据
