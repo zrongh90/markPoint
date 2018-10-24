@@ -269,3 +269,12 @@ net.ipv4.tcp_mem				/proc/sys/net/ipv4/tcp_mem
 
 	--exclude-from=FILE：排除文件中指定模式，例如--exclude-from="/home/tmpusr/ex.pattern"
 
+lsof常用方法
+
+	lsof -P -i4 所有TCP4上的网络连接
+	lsof -I @192.168.43.251 所有关于IP的连接
+	lsof -I :3306确认端口占用情况
+	lsof <path/to/file> 确认文件占用情况
+	lsof -p pid 确认进程打开文件情况
+	lsof +d <path/to/file> 确认目录下的文件打开情况
+
