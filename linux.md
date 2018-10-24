@@ -118,8 +118,10 @@
 	
 24、用户管理：
 
-	useradd默认参数主要涉及/etc/login.defs和/etc/default/useradd。
-	默认的用户ID及组ID内容可以参考/usr/share/doc/setup-2.8.14/uidgid文件
+useradd默认参数主要涉及/etc/login.defs和/etc/default/useradd。
+
+默认的用户ID及组ID内容可以参考/usr/share/doc/setup-2.8.14/uidgid文件
+
 	文件内容：
 		NAME	UID	GID	HOME		SHELL	       PACKAGES
 		root	0	0	/root		/bin/bash	    setup
@@ -146,10 +148,15 @@ lscpu查看CPU硬件信息；lsblk查看块设备信息；findmnt查看文件系
 29、用户超时时间/etc/profile的TMOUT参数；
 
     密码及锁定策略/etc/pam.d/system-auth
+
 	auth模块：身份识别
+
 	auth        required      pam_tally2.so    onerr=fail deny=5 unlock_time=300 even_deny_root root_unlock_time=300
+
 	password模块：密码策略
+
 	password    requisite      pam_cracklib.so try_first_pass retry=5 minlen=8 dcredit=-1  lcredit=-1 enforce_for_root
+	
 	ssh是否允许root登录/etc/ssh/sshd_config中的PermitRootLogin no
 	
 30、切记~/.ssh/authorized_keys文件的权限会影响是否可以通过密钥连接，目标权限为0600
@@ -171,6 +178,7 @@ sysctl -a
 
 	1)yum deplist rpm_name     #查询rpm所需依赖包
 	2)yumdownloader rpm_name   #下载目标rpm包
+
 ```shell
 [tmpusr@ansible ~]$ yum deplist gcc-c++.x86_64 | grep provider | uniq | grep -v i686
 	provider: bash.x86_64 4.2.46-21.el7_3
