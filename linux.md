@@ -245,8 +245,12 @@ net.ipv4.tcp_mem				/proc/sys/net/ipv4/tcp_mem
 2. 使用rsync SRC [USER@]host:DEST 或 rsync [USER@]host:SRC DEST，进行远程数据的拷贝
 
 	-a: 等于-rlptgoD，-r递归,-l保留软链接,-p保留文件权限,-t保留时间信息,-g保留组信息,-o保留用户信息,-D保留设备文件信息
+
 	-u, --update：仅仅更新数据
+
 	-v, --verbose：详细模式
+
 	--exclude=PATTERN：排除模式,例如--exclude="test.log"
+
 	--exclude-from=FILE：排除文件中指定模式，例如--exclude-from="/home/tmpusr/ex.pattern"
 
