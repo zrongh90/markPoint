@@ -29,7 +29,6 @@
 10、查看端口占用可以使用lsof -i :80（查看80端口是否被占用）
 
 11、du -s * | sort -k1nr :作用是排序当前目录下的目录占用空间大小
-
     (k1:指定第一个区域，n以数字排序，r反向排序)
 
 12、fuser命令非常的有用. 某些情况下, 也就是当你umount一个设备失败的时候, 会出现设备忙错误消息. 这意味着某些用户或进程正在访问这个设备. 可以使用fuser -um /dev/device_name来解决这种问题, 这样你就可以kill所有相关的进程.
@@ -54,6 +53,7 @@
 ```shell
 	mount -o loop /home/zrongh/test.iso /mnt
 ```
+
 	AIX mount iso
 ```shell
 	loopmount -i test.iso -o "-V cdrfs -o ro" -m /mnt
@@ -74,10 +74,12 @@
 	2)通过第二步确定的inode(ls -il 的第一列的数字）的信息，使用find . -inum XXX -exec rm {} \;
 	
 19、扩大swap分歧
+```shell
 	swapoff -a                        #关闭所有swap分区，把swap内容交换出去
 	lvextend -L 16G /dev/rootvg/swap  #LVM扩大 
 	mkswap /dev/rootvg/swap           #定义lv为swap分区
-	swapon -a                         #打开swap  
+	swapon -a                         #打开swap 
+```
 
 20、用户增加sudo权限（推荐在/etc/sudoers.d中增加一个文件）
 <授权用户> <主机列表>=<runas用户> <参数（例如NOPASSWD)> <命令>
