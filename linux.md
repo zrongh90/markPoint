@@ -34,27 +34,40 @@
 12、fuser命令非常的有用. 某些情况下, 也就是当你umount一个设备失败的时候, 会出现设备忙错误消息. 这意味着某些用户或进程正在访问这个设备. 可以使用fuser -um /dev/device_name来解决这种问题, 这样你就可以kill所有相关的进程.
 
 13、${}替换规则：
+
 	${var#*/}:删除第一个/前的所有字符
+
 	${var##*/}:删除最后一个/前的所有字符
+
 	${var%/*}:删除最后一个/右边的字符
+
 	${var%%/*}}:删除第一个/右边的字符
+
 	${var-defaultVar}:测试$var是否为空，为空则返回defaultVar
+	
 	${var=defaultVar}:测试$var是否为空，为空则设值后返回
 	
 14、在tar的过程中，可以通过添加--remove-files参数删除打包前的源文件
 	tar -zcvf destFile.tar.gz sourceFiles --remove-files
 
-15、etc —— 配置文件
-		skel —— home目录建立，该目录初始化
-		sysconfig —— 网络，时间，键盘配置目录
-	opt —— 额外安装软件的目录
+15、文件信息
 
-16、linux mount iso
+etc —— 配置文件
+
+skel —— home目录建立，该目录初始化
+
+sysconfig —— 网络，时间，键盘配置目录
+
+opt —— 额外安装软件的目录
+
+16、mount iso
+
+1. linux
 ```shell
 	mount -o loop /home/zrongh/test.iso /mnt
 ```
 
-	AIX mount iso
+2. AIX
 ```shell
 	loopmount -i test.iso -o "-V cdrfs -o ro" -m /mnt
 ```
