@@ -1,9 +1,10 @@
-1、whatis快速查出命令的用途
+1、`whatis`快速查出命令的用途
+   `whereis` 快速定位命令的位置
 
-2、basename - strip directory and suffix from filenames
-	dirname - strip non-directory suffix from file name
+2、`basename` - strip directory and suffix from filenames
+	`dirname` - strip non-directory suffix from file name
 
-3、linux下可以尝试用vdir命令提供ls -l
+3、linux下可以尝试用`vdir`命令提供ls -l
 
 4、不推荐使用sh scriptname来执行脚本，因为这禁用了脚本从stdin中读取数据的功能
 
@@ -26,12 +27,12 @@
 
 9、Bash变量不区分类型，关键因素是变量值是否只有数字
 
-10、查看端口占用可以使用lsof -i :80（查看80端口是否被占用）
+10、查看端口占用可以使用`lsof -i :80`（查看80端口是否被占用）
 
-11、du -s * | sort -k1nr :作用是排序当前目录下的目录占用空间大小
+11、`du -s * | sort -k1nr` :作用是排序当前目录下的目录占用空间大小
     (k1:指定第一个区域，n以数字排序，r反向排序)
 
-12、fuser命令非常的有用. 某些情况下, 也就是当你umount一个设备失败的时候, 会出现设备忙错误消息. 这意味着某些用户或进程正在访问这个设备. 可以使用fuser -um /dev/device_name来解决这种问题, 这样你就可以kill所有相关的进程.
+12、`fuser`命令非常的有用. 某些情况下, 也就是当你umount一个设备失败的时候, 会出现设备忙错误消息. 这意味着某些用户或进程正在访问这个设备. 可以使用fuser -um /dev/device_name来解决这种问题, 这样你就可以kill所有相关的进程.
 
 13、${}替换规则：
 
@@ -47,7 +48,7 @@
 
 	${var=defaultVar}:测试$var是否为空，为空则设值后返回
 	
-14、在tar的过程中，可以通过添加--remove-files参数删除打包前的源文件
+14、在`tar`的过程中，可以通过添加--remove-files参数删除打包前的源文件
 
 	tar -zcvf destFile.tar.gz sourceFiles --remove-files
 
@@ -64,12 +65,12 @@
 16、mount iso
 
 1. linux
-```shell
+```console
 	mount -o loop /home/zrongh/test.iso /mnt
 ```
 
 2. AIX
-```shell
+```console
 	loopmount -i test.iso -o "-V cdrfs -o ro" -m /mnt
 ```
 
@@ -79,8 +80,8 @@
 	vim取消多行注释：在命令行ctrl+v，通过x删除字符
 	
 18、遇到文件含有特殊字符的处理方法
-1. 通过ls -il获取inode信息
-```shell
+1. 通过`ls -il`获取inode信息
+```console
 ls -il | cat -v
 [tmpusr@ansible ~]$ ls -il
 total 188
@@ -107,7 +108,7 @@ swapon -a                         #打开swap
 	<授权用户> <主机列表>=<runas用户> <参数（例如NOPASSWD)> <命令>
 	例如 tmpusr ALL=(ALL) /usr/bin/sysdumpdev   #运行tmpusr用户以任意用户执行sysdumpdev
 
-21、使用iperf测试网络速度
+21、使用`iperf`测试网络速度
 1. 在两台主机安装iperf的rpm包
 2. 服务端启动：iperf -s ;客户端连接iperf -c X.X.X.X -t 60 -i 1
 	(其中-s指定启动服务器程序；-c指定服务端IP；-t指定时间间隔；-i指定结果返回时间；-u测试UDP模式)
@@ -116,7 +117,7 @@ swapon -a                         #打开swap
 1. ps aux 查看系统进程的状态（STAT）：（S睡眠、R运行、D不可中断睡眠，等待输入或输出完成、T停止、Z僵尸进程）
 2. 查看/proc/pid***/stack（栈）和/proc/pid***/fd（文件描述符）、lsof -p pid***、/var/log/dmesg或messages看系统日志
 
-23、top中进程的信息
+23、`top`中进程的信息
 
 	VIRT：进程使用的虚拟内存总量
 	RES：进程在使用的、未被换出的物理内存大小
@@ -131,9 +132,9 @@ swapon -a                         #打开swap
 	7）键盘f：添加或删除当前显示项
 	8）键盘o：改变列显示的位置
 	
-24、用户管理：
+24、用户管理
 
-useradd默认参数主要涉及/etc/login.defs和/etc/default/useradd。
+	`useradd`默认参数主要涉及/etc/login.defs和/etc/default/useradd。
 
 默认的用户ID及组ID内容可以参考/usr/share/doc/setup-2.8.14/uidgid文件
 
@@ -143,7 +144,7 @@ useradd默认参数主要涉及/etc/login.defs和/etc/default/useradd。
 		bin	    1	1	/bin		/sbin/nologin	setup
 		daemon	2	2	/sbin		/sbin/nologin	setup
 
-25、lslogins查看用户的登录信息，可以显示所有用户，也可以指定用户,定义输出内容
+25、`lslogins`查看用户的登录信息，可以显示所有用户，也可以指定用户,定义输出内容
 
 26、修改wheel组中的用户及/etc/pam.d/su可以控制哪些用户可以使用su命令，哪些用户可以不用密码授权进行su
 
@@ -152,9 +153,9 @@ useradd默认参数主要涉及/etc/login.defs和/etc/default/useradd。
 	# Uncomment the following line to require a user to be in the "wheel" group.
 	#auth		required	pam_wheel.so use_uid
 
-27、repoquery --list package_name可以列出软件包下包括的文件，yum provides "file_name" 可以列出文件属于repo库中的哪package
+27、`repoquery --list package_name`可以列出软件包下包括的文件，yum provides "file_name" 可以列出文件属于repo库中的哪package
 
-28、lspci查看PCI硬件信息
+28、`lspci`查看PCI硬件信息
 
 - lscpu查看CPU硬件信息；
 - lsblk查看块设备信息；
@@ -174,14 +175,14 @@ useradd默认参数主要涉及/etc/login.defs和/etc/default/useradd。
 	
 30、切记~/.ssh/authorized_keys文件的权限会影响是否可以通过密钥连接，目标权限为0600
 
-31、sysctl：可以修改正在运行中的linux系统接口，包括tcp/ip堆栈和虚拟内存系统的选项
+31、`sysctl`：可以修改正在运行中的linux系统接口，包括tcp/ip堆栈和虚拟内存系统的选项
 
 	sysctl -a 列出当前生效的值
 	sysctl -w kernel.hostname="test" 临时修改系统参数配置
 	修改/etc/sysctl.conf文件 永久修改系统参数设置
 	
 32、tcpip的接受发送buffer
-```shell
+```console
 sysctl -a
 
 net.ipv4.tcp_rmem				/proc/sys/net/ipv4/tcp_rmem
@@ -189,7 +190,7 @@ net.ipv4.tcp_wmem				/proc/sys/net/ipv4/tcp_wmem
 net.ipv4.tcp_mem				/proc/sys/net/ipv4/tcp_mem
 ```
 	
-33、通过yum环境确定需要安装的rpm包的依赖关系
+33、通过`yum`环境确定需要安装的rpm包的依赖关系
 
 1. yum deplist rpm_name     #查询rpm所需依赖包
 2. yumdownloader rpm_name   #下载目标rpm包
@@ -234,7 +235,7 @@ net.ipv4.tcp_mem				/proc/sys/net/ipv4/tcp_mem
 
 38、vmstat分析
 
-39、通过uptime分析系统负载,平均负载指特定时间间隔内运行队列中的平均进程数。
+39、通过`uptime`分析系统负载,平均负载指特定时间间隔内运行队列中的平均进程数。
 
 	$ uptime
 	09:22AM   up 251 days,  14:03,  3 users,  load average: 2.61, 1.99, 2.50
@@ -243,7 +244,7 @@ net.ipv4.tcp_mem				/proc/sys/net/ipv4/tcp_mem
 	per cpu 活动进程>5    性能问题
     上述系统为8C，所有平均负载不大于3*8=24表明系统性能良好
 
-40、使用rsync进行数据的同步，一般使用-auv参数。
+40、使用`rsync`进行数据的同步，一般使用-auv参数。
 
 1. 使用rsync SRC DEST，进行本地数据的拷贝
 2. 使用rsync SRC [USER@]host:DEST 或 rsync [USER@]host:SRC DEST，进行远程数据的拷贝
