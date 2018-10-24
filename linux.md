@@ -1,9 +1,14 @@
 1、whatis快速查出命令的用途
+
 2、basename - strip directory and suffix from filenames
 	dirname - strip non-directory suffix from file name
+
 3、linux下可以尝试用vdir命令提供ls -l
+
 4、不推荐使用sh scriptname来执行脚本，因为这禁用了脚本从stdin中读取数据的功能
+
 5、'STRING'将会阻止STRING中所有特殊字符的解释
+
 6、在括号中的命令列表，作为一个子shell运行。
 	例如 a=123
 		 ( a=321; )
