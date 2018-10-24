@@ -10,9 +10,12 @@
 5、'STRING'将会阻止STRING中所有特殊字符的解释
 
 6、在括号中的命令列表，作为一个子shell运行。
-	例如 a=123
+	例如 
+```html
+	a=123
 		 ( a=321; )
 		 echo "$a" 结果为123
+```
 7、数组初始化方式
 		Array=(element1 element2 element3)
 8、使用a=$(echo test)机制来进行变量赋值(这是一种比后置引用(反引号a=`echo test`)更新的一种方法).
