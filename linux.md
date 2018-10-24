@@ -44,7 +44,7 @@
 	${var%%/*}}:删除第一个/右边的字符
 
 	${var-defaultVar}:测试$var是否为空，为空则返回defaultVar
-	
+
 	${var=defaultVar}:测试$var是否为空，为空则设值后返回
 	
 14、在tar的过程中，可以通过添加--remove-files参数删除打包前的源文件
@@ -52,13 +52,13 @@
 
 15、文件信息
 
-etc —— 配置文件
+	etc —— 配置文件
 
-skel —— home目录建立，该目录初始化
+	skel —— home目录建立，该目录初始化
 
-sysconfig —— 网络，时间，键盘配置目录
+	sysconfig —— 网络，时间，键盘配置目录
 
-opt —— 额外安装软件的目录
+	opt —— 额外安装软件的目录
 
 16、mount iso
 
@@ -72,7 +72,9 @@ opt —— 额外安装软件的目录
 	loopmount -i test.iso -o "-V cdrfs -o ro" -m /mnt
 ```
 
-17、vim多行注释：在命令行ctrl+v,使用j或k选中多行，键入大写字母I，在插入注释符#后,esc退出
+17、vim多行注释
+
+	在命令行ctrl+v,使用j或k选中多行，键入大写字母I，在插入注释符#后,esc退出
 	vim取消多行注释：在命令行ctrl+v，通过x删除字符
 	
 18、遇到文件含有特殊字符的处理方法
@@ -110,9 +112,9 @@ opt —— 额外安装软件的目录
 
 22、进程问题分析思路
 
-	1）ps aux 查看系统进程的状态（STAT）：（S睡眠、R运行、D不可中断睡眠，等待输入或输出完成、T停止、Z僵尸进程）
+1. ps aux 查看系统进程的状态（STAT）：（S睡眠、R运行、D不可中断睡眠，等待输入或输出完成、T停止、Z僵尸进程）
 
-	2）查看/proc/pid***/stack（栈）和/proc/pid***/fd（文件描述符）、lsof -p pid***、/var/log/dmesg或messages看系统日志
+2. 查看/proc/pid***/stack（栈）和/proc/pid***/fd（文件描述符）、lsof -p pid***、/var/log/dmesg或messages看系统日志
 
 23、top中进程的信息
 
