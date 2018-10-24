@@ -11,19 +11,29 @@
 
 6、在括号中的命令列表，作为一个子shell运行。
 	例如 
-```html
+```shell
 	a=123
-		 ( a=321; )
-		 echo "$a" 结果为123
+	( a=321; )
+	echo "$a" #结果为123
 ```
+
 7、数组初始化方式
-		Array=(element1 element2 element3)
+```shell
+	Array=(element1 element2 element3)
+```
+
 8、使用a=$(echo test)机制来进行变量赋值(这是一种比后置引用(反引号a=`echo test`)更新的一种方法).
+
 9、Bash变量不区分类型，关键因素是变量值是否只有数字
+
 10、查看端口占用可以使用lsof -i :80（查看80端口是否被占用）
+
 11、du -s * | sort -k1nr :作用是排序当前目录下的目录占用空间大小
+
     (k1:指定第一个区域，n以数字排序，r反向排序)
+
 12、fuser命令非常的有用. 某些情况下, 也就是当你umount一个设备失败的时候, 会出现设备忙错误消息. 这意味着某些用户或进程正在访问这个设备. 可以使用fuser -um /dev/device_name来解决这种问题, 这样你就可以kill所有相关的进程.
+
 13、${}替换规则：
 	${var#*/}:删除第一个/前的所有字符
 	${var##*/}:删除最后一个/前的所有字符
@@ -34,26 +44,33 @@
 	
 14、在tar的过程中，可以通过添加--remove-files参数删除打包前的源文件
 	tar -zcvf destFile.tar.gz sourceFiles --remove-files
+
 15、etc —— 配置文件
 		skel —— home目录建立，该目录初始化
 		sysconfig —— 网络，时间，键盘配置目录
 	opt —— 额外安装软件的目录
+
 16、linux mount iso
+```shell
 	mount -o loop /home/zrongh/test.iso /mnt
-	--AIX mount iso
+```
+	AIX mount iso
+```shell
 	loopmount -i test.iso -o "-V cdrfs -o ro" -m /mnt
-	
+```
+
 17、vim多行注释：在命令行ctrl+v,使用j或k选中多行，键入大写字母I，在插入注释符#后,esc退出
 	vim取消多行注释：在命令行ctrl+v，通过x删除字符
 	
 18、遇到文件含有特殊字符的处理方法
 	1)ls -il | cat -v
+```shell
 	[tmpusr@ansible ~]$ ls -il
 	total 188
     13736 drwxr-xr-x  6 root   root       88 Mar 13 11:42 ansible-aix-playbooks
     185 -rw-r--r--  1 tmpusr tmpusr   4573 Jun  2  2016 ansible.hosts
 	50331821 drwxrwxr-x 14 tmpusr tmpusr   4096 Mar 24 09:42 ansible-playbooks
-
+```
 	2)通过第二步确定的inode(ls -il 的第一列的数字）的信息，使用find . -inum XXX -exec rm {} \;
 	
 19、扩大swap分歧
