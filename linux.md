@@ -48,6 +48,7 @@
 	${var=defaultVar}:测试$var是否为空，为空则设值后返回
 	
 14、在tar的过程中，可以通过添加--remove-files参数删除打包前的源文件
+
 	tar -zcvf destFile.tar.gz sourceFiles --remove-files
 
 15、文件信息
@@ -78,42 +79,41 @@
 	vim取消多行注释：在命令行ctrl+v，通过x删除字符
 	
 18、遇到文件含有特殊字符的处理方法
-	1)ls -il | cat -v
+1. 通过ls -il获取inode信息
 ```shell
-	[tmpusr@ansible ~]$ ls -il
-	total 188
-    13736 drwxr-xr-x  6 root   root       88 Mar 13 11:42 ansible-aix-playbooks
-    185 -rw-r--r--  1 tmpusr tmpusr   4573 Jun  2  2016 ansible.hosts
-	50331821 drwxrwxr-x 14 tmpusr tmpusr   4096 Mar 24 09:42 ansible-playbooks
+ls -il | cat -v
+[tmpusr@ansible ~]$ ls -il
+total 188
+13736 drwxr-xr-x  6 root   root       88 Mar 13 11:42 ansible-aix-playbooks
+185 -rw-r--r--  1 tmpusr tmpusr   4573 Jun  2  2016 ansible.hosts
+50331821 drwxrwxr-x 14 tmpusr tmpusr   4096 Mar 24 09:42 ansible-playbooks
 ```
-	2)通过第二步确定的inode(ls -il 的第一列的数字）的信息，使用find . -inum XXX -exec rm {} \;
-	
+
+2. 通过第二步确定的inode(ls -il 的第一列的数字）的信息，使用以下命令进行删除
+```shell
+find . -inum XXX -exec rm {} \;
+```
+
 19、扩大swap分歧
 ```shell
-	swapoff -a                        #关闭所有swap分区，把swap内容交换出去
-	lvextend -L 16G /dev/rootvg/swap  #LVM扩大 
-	mkswap /dev/rootvg/swap           #定义lv为swap分区
-	swapon -a                         #打开swap 
+swapoff -a	#关闭所有swap分区，把swap内容交换出去
+lvextend -L 16G /dev/rootvg/swap  #LVM扩大 
+mkswap /dev/rootvg/swap           #定义lv为swap分区
+swapon -a                         #打开swap 
 ```
 
 20、用户增加sudo权限（推荐在/etc/sudoers.d中增加一个文件）
 
-<授权用户> <主机列表>=<runas用户> <参数（例如NOPASSWD)> <命令>
-
-例如 tmpusr ALL=(ALL) /usr/bin/sysdumpdev   #运行tmpusr用户以任意用户执行sysdumpdev
+	<授权用户> <主机列表>=<runas用户> <参数（例如NOPASSWD)> <命令>
+	例如 tmpusr ALL=(ALL) /usr/bin/sysdumpdev   #运行tmpusr用户以任意用户执行sysdumpdev
 
 21、使用iperf测试网络速度
-
-	1）在两台主机安装iperf的rpm包
-
-	2）服务端启动：iperf -s ;客户端连接iperf -c X.X.X.X -t 60 -i 1
-
+1. 在两台主机安装iperf的rpm包
+2. 服务端启动：iperf -s ;客户端连接iperf -c X.X.X.X -t 60 -i 1
 	(其中-s指定启动服务器程序；-c指定服务端IP；-t指定时间间隔；-i指定结果返回时间；-u测试UDP模式)
 
 22、进程问题分析思路
-
 1. ps aux 查看系统进程的状态（STAT）：（S睡眠、R运行、D不可中断睡眠，等待输入或输出完成、T停止、Z僵尸进程）
-
 2. 查看/proc/pid***/stack（栈）和/proc/pid***/fd（文件描述符）、lsof -p pid***、/var/log/dmesg或messages看系统日志
 
 23、top中进程的信息
@@ -152,24 +152,22 @@ useradd默认参数主要涉及/etc/login.defs和/etc/default/useradd。
 	# Uncomment the following line to require a user to be in the "wheel" group.
 	#auth		required	pam_wheel.so use_uid
 
-27、repoquery --list package_name 
-
-可以列出软件包下包括的文件，yum provides "file_name" 可以列出文件属于repo库中的哪package
+27、repoquery --list package_name可以列出软件包下包括的文件，yum provides "file_name" 可以列出文件属于repo库中的哪package
 
 28、lspci查看PCI硬件信息
 
-lscpu查看CPU硬件信息；lsblk查看块设备信息；findmnt查看文件系统挂载信息
+- lscpu查看CPU硬件信息；
+- lsblk查看块设备信息；
+- findmnt查看文件系统挂载信息
 
 29、用户超时时间/etc/profile的TMOUT参数；
 
     密码及锁定策略/etc/pam.d/system-auth
 
 	auth模块：身份识别
-
 	auth        required      pam_tally2.so    onerr=fail deny=5 unlock_time=300 even_deny_root root_unlock_time=300
 
 	password模块：密码策略
-
 	password    requisite      pam_cracklib.so try_first_pass retry=5 minlen=8 dcredit=-1  lcredit=-1 enforce_for_root
 
 	ssh是否允许root登录/etc/ssh/sshd_config中的PermitRootLogin no
@@ -183,7 +181,6 @@ lscpu查看CPU硬件信息；lsblk查看块设备信息；findmnt查看文件系
 	修改/etc/sysctl.conf文件 永久修改系统参数设置
 	
 32、tcpip的接受发送buffer
-
 ```shell
 sysctl -a
 
@@ -194,10 +191,8 @@ net.ipv4.tcp_mem				/proc/sys/net/ipv4/tcp_mem
 	
 33、通过yum环境确定需要安装的rpm包的依赖关系
 
-1)yum deplist rpm_name     #查询rpm所需依赖包
-
-2)yumdownloader rpm_name   #下载目标rpm包
-
+1. yum deplist rpm_name     #查询rpm所需依赖包
+2. yumdownloader rpm_name   #下载目标rpm包
 ```shell
 [tmpusr@ansible ~]$ yum deplist gcc-c++.x86_64 | grep provider | uniq | grep -v i686
 	provider: bash.x86_64 4.2.46-21.el7_3
@@ -219,21 +214,16 @@ net.ipv4.tcp_mem				/proc/sys/net/ipv4/tcp_mem
 ```
 
 34、/etc/security/limits.conf限制了用户的可使用资源，修改用户的打开文件资源限制。
-
 1. 修改/etc/security/limits.conf的nofile
-
 2. 打开文件限制设置值参考/proc/sys/fs/file-max
-
 3. 用户的ulimit设置值不能大于limits.conf文件中的限制。
 (例如root:ulimit -u为5000；tmpusr无法通过ulimit -u 5001)
 
 35、进入单用户模式，在grub节修改kernel行，在末尾添加single
 
 36、启动图形界面
-
 1. AIX
-
-	执行/etc/rc.dt
+	1. 执行/etc/rc.dt
 
 2. linux 
 	1. 修改/etc/gdm/customer.conf：在[xdcmp]下增加Port=177和Enable=1 
@@ -256,9 +246,7 @@ net.ipv4.tcp_mem				/proc/sys/net/ipv4/tcp_mem
 40、使用rsync进行数据的同步，一般使用-auv参数。
 
 1. 使用rsync SRC DEST，进行本地数据的拷贝
-
 2. 使用rsync SRC [USER@]host:DEST 或 rsync [USER@]host:SRC DEST，进行远程数据的拷贝
-
 	-a: 等于-rlptgoD，-r递归,-l保留软链接,-p保留文件权限,-t保留时间信息,-g保留组信息,-o保留用户信息,-D保留设备文件信息
 
 	-u, --update：仅仅更新数据
