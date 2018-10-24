@@ -6,19 +6,22 @@ screen -S top_long
 ```
 
 2. 离开这个窗口并让程序继续执行
-```shell
+```console
 CTRL+A+D
 ```
+<img src='../pics/screen_ctrl_A_D.png'>
 
 3. 列出所有窗口
-```shell
+```console
 screen -ls
 ```
+<img src='../pics/screen_ls.png'>
 
 4. 重新进入名为top_long的窗口
 ```shell
 screen -r top_long
 ```
+<img src='../pics/screen_r.png'>
 
 5. 退出窗口
     在窗口内exit
