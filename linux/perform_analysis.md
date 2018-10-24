@@ -4,7 +4,9 @@ sar由sysstat rpm包提供，如果系统不自带，可通过`yum install sysst
 
 ## 怀疑CPU
 - sar -u看利用率
+
 <img src='../pics/sar_u.png'>
+
 - sar -q看队列
 	
 >runq_sz:准备运行的进程队列
