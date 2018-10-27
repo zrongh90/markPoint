@@ -268,3 +268,37 @@ lsof常用方法
 	lsof -p pid 确认进程打开文件情况
 	lsof +d <path/to/file> 确认目录下的文件打开情况
 
+查看系统信息，亲测（例如底层机器型号或虚拟机），在容器中使用保存，查看原因
+	`dmidecode -t 1`
+```console
+[root@vultr ~]# dmidecode -t 1
+# dmidecode 3.0
+Getting SMBIOS data from sysfs.
+SMBIOS 2.8 present.
+
+Handle 0x0100, DMI type 1, 27 bytes
+System Information
+	Manufacturer: QEMU
+	Product Name: Standard PC (i440FX + PIIX, 1996)
+	Version: pc-i440fx-3.0
+	Serial Number: Not Specified
+	UUID: F3B6F3A2-305C-4CA0-A718-EF246FFDEF10
+	Wake-up Type: Power Switch
+	SKU Number: Not Specifie
+
+[root@zrongh ~]# dmidecode -t 1
+# dmidecode 3.0
+Getting SMBIOS data from sysfs.
+SMBIOS 2.5 present.
+
+Handle 0x0001, DMI type 1, 27 bytes
+System Information
+	Manufacturer: innotek GmbH
+	Product Name: VirtualBox
+	Version: 1.2
+	Serial Number: 0
+	UUID: 10866277-427E-4EBC-BBC4-DBF1C8ACABF1
+	Wake-up Type: Power Switch
+	SKU Number: Not Specified
+	Family: Virtual Machine
+```
