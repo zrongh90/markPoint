@@ -268,7 +268,7 @@ lsof常用方法
 	lsof -p pid 确认进程打开文件情况
 	lsof +d <path/to/file> 确认目录下的文件打开情况
 
-查看系统信息，亲测（例如底层机器型号或虚拟机），在容器中使用保存，查看原因
+查看系统信息，亲测（例如底层机器型号或虚拟机），在容器中使用报错
 	`dmidecode -t 1`
 ```console
 [root@vultr ~]# dmidecode -t 1
@@ -302,3 +302,44 @@ System Information
 	SKU Number: Not Specified
 	Family: Virtual Machine
 ```
+
+在容器中运行报错，如下：
+```console
+[root@820a0cc6702e /]# dmidecode 
+# dmidecode 3.0
+Scanning /dev/mem for entry point.
+/dev/mem: No such file or directory
+```
+根据错误信息，将主机的/dev/mem映射到容器中（此处有坑）
+docker run -it --device /dev/mem:/dev/mem centos /bin/bash
+继续执行，提示另外一个错误Operation not permitted，这次是docker权限的设置问题，默认docker的容器是以unprivileged的方式进行运行，无法访问任何设备，如下：
+```console
+[root@50ccf0622c07 dev]# ls
+core  fd  full  mqueue  null  ptmx  pts  random  shm  stderr  stdin  stdout  tty  urandom  zero
+```
+但是如果通过打开特权模式(`docker run -d --priviledged=true centos /bin/bash`)启动容器，那容器可以由有访问所有设备的权限
+[root@122d0a1754ec /]# ls /dev/
+autofs           dri        log                 port      sr0     tty15  tty26  tty37  tty48  tty59  ttyS3    vcs6         vhci
+block            fb0        loop-control        ppp       stderr  tty16  tty27  tty38  tty49  tty6   uhid     vcsa         vhost-net
+bsg              fd         mapper              ptmx      stdin   tty17  tty28  tty39  tty5   tty60  uinput   vcsa1        zero
+btrfs-control    full       mcelog              pts       stdout  tty18  tty29  tty4   tty50  tty61  urandom  vcsa2
+bus              fuse       mem                 random    tty     tty19  tty3   tty40  tty51  tty62  usbmon0  vcsa3
+cdrom            hidraw0    mqueue              raw       tty0    tty2   tty30  tty41  tty52  tty63  usbmon1  vcsa4
+char             hpet       net                 rtc       tty1    tty20  tty31  tty42  tty53  tty7   vcs      vcsa5
+core             hugepages  network_latency     rtc0      tty10   tty21  tty32  tty43  tty54  tty8   vcs1     vcsa6
+cpu              hwrng      network_throughput  sg0       tty11   tty22  tty33  tty44  tty55  tty9   vcs2     vda
+cpu_dma_latency  initctl    null                shm       tty12   tty23  tty34  tty45  tty56  ttyS0  vcs3     vda1
+crash            input      nvram               snapshot  tty13   tty24  tty35  tty46  tty57  ttyS1  vcs4     vfio
+disk             kmsg       oldmem              snd       tty14   tty25  tty36  tty47  tty58  ttyS2  vcs5     vga_arbiter
+```
+最后服务方式启动docker `docker run -d --privileged centos /usr/sbin/init`
+[root@vultr dev]# ls -lrt /usr/sbin/init
+lrwxrwxrwx. 1 root root 22 Jun  5 21:39 /usr/sbin/init -> ../lib/systemd/systemd
+
+```console
+[root@d7206380b726 /]# dmidecode 
+# dmidecode 3.0
+Scanning /dev/mem for entry point.
+/dev/mem: Operation not permitted
+```
+
