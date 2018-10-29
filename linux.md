@@ -302,7 +302,6 @@ System Information
 	SKU Number: Not Specified
 	Family: Virtual Machine
 ```
-
 在容器中运行报错，如下：
 ```console
 [root@820a0cc6702e /]# dmidecode 
@@ -316,9 +315,13 @@ docker run -it --device /dev/mem:/dev/mem centos /bin/bash
 ```console
 [root@50ccf0622c07 dev]# ls
 core  fd  full  mqueue  null  ptmx  pts  random  shm  stderr  stdin  stdout  tty  urandom  zero
+[root@d7206380b726 /]# dmidecode 
+# dmidecode 3.0
+Scanning /dev/mem for entry point.
+/dev/mem: Operation not permitted
 ```
-但是如果通过打开特权模式(`docker run -d --priviledged=true centos /bin/bash`)启动容器，那容器可以由有访问所有设备的权限
-[root@122d0a1754ec /]# ls /dev/
+但是如果通过打开特权模式(`docker run -d --privileged=true centos /bin/bash`)启动容器，那容器可以由有访问所有设备的权限
+[root@669e2eb40e46 /]# ls /dev/
 autofs           dri        log                 port      sr0     tty15  tty26  tty37  tty48  tty59  ttyS3    vcs6         vhci
 block            fb0        loop-control        ppp       stderr  tty16  tty27  tty38  tty49  tty6   uhid     vcsa         vhost-net
 bsg              fd         mapper              ptmx      stdin   tty17  tty28  tty39  tty5   tty60  uinput   vcsa1        zero
@@ -332,14 +335,27 @@ cpu_dma_latency  initctl    null                shm       tty12   tty23  tty34  
 crash            input      nvram               snapshot  tty13   tty24  tty35  tty46  tty57  ttyS1  vcs4     vfio
 disk             kmsg       oldmem              snd       tty14   tty25  tty36  tty47  tty58  ttyS2  vcs5     vga_arbiter
 ```
-最后服务方式启动docker `docker run -d --privileged centos /usr/sbin/init`
+此时`dmidecode -t 1`命令运行正常.
+```console
+[root@669e2eb40e46 /]# dmidecode -t 1
+# dmidecode 3.0
+Getting SMBIOS data from sysfs.
+SMBIOS 2.8 present.
+
+Handle 0x0100, DMI type 1, 27 bytes
+System Information
+	Manufacturer: QEMU
+	Product Name: Standard PC (i440FX + PIIX, 1996)
+	Version: pc-i440fx-3.0
+	Serial Number: Not Specified
+	UUID: F3B6F3A2-305C-4CA0-A718-EF246FFDEF10
+	Wake-up Type: Power Switch
+	SKU Number: Not Specified
+	Family: Not Specified
+```
+最后，如果需要以特权并且使用systemctl进行容器中进程的管理，需要以下启动方式
+以服务方式启动docker `docker run -d --privileged centos /usr/sbin/init`
 [root@vultr dev]# ls -lrt /usr/sbin/init
 lrwxrwxrwx. 1 root root 22 Jun  5 21:39 /usr/sbin/init -> ../lib/systemd/systemd
 
-```console
-[root@d7206380b726 /]# dmidecode 
-# dmidecode 3.0
-Scanning /dev/mem for entry point.
-/dev/mem: Operation not permitted
-```
 
