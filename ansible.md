@@ -1,10 +1,13 @@
-主控：ansible主机          远程主机：受管主机
-1、command/script/shell
-command：可以运行远程权限范围内所有shell命令；
-script：远程主机执行主控端的shell脚本文件，类似与scp+shell；
-shell：执行远程主机的脚本文件
+0. 主控：ansible主机          远程主机：受管主机
+1. command/script/shell
+	
+	command：可以运行远程权限范围内所有shell命令；
 
-2、使用注册变量，将find模块得到的文件信息写入shell_list中，在下一个模块中通过with_items获取变量的内容。
+	script：远程主机执行主控端的shell脚本文件，类似与scp+shell；
+
+	shell：执行远程主机的脚本文件
+
+2. 使用注册变量，将find模块得到的文件信息写入shell_list中，在下一个模块中通过with_items获取变量的内容。
 shell_list的结构：
 "shell_list": {
 	“changed":"false"
