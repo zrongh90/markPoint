@@ -373,7 +373,9 @@ System Information
 ```
 最后，如果需要以特权并且使用systemctl进行容器中进程的管理，需要以下启动方式
 以服务方式启动docker `docker run -d --privileged centos /usr/sbin/init`
+```console
 [root@vultr dev]# ls -lrt /usr/sbin/init
 lrwxrwxrwx. 1 root root 22 Jun  5 21:39 /usr/sbin/init -> ../lib/systemd/systemd
+```
 
 
