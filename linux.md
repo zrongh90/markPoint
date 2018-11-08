@@ -111,11 +111,28 @@ swapon -a                         #打开swap
 
 21、使用`iperf`测试网络速度
 1. 在两台主机安装iperf的rpm包
-2. 服务端启动：iperf -s ;客户端连接iperf -c X.X.X.X -t 60 -i 1
-	(其中-s指定启动服务器程序；-c指定服务端IP；-t指定时间间隔；-i指定结果返回时间；-u测试UDP模式)
+2. 服务端
+
+	iperf -s
+
+	客户端
+	
+	iperf -c X.X.X.X -t 60 -i 1
+		
+		-s指定启动服务器程序；
+		-c指定服务端IP；
+		-t指定时间间隔；
+		-i指定结果返回时间；
+		-u测试UDP模式
 
 22、进程问题分析思路
-1. ps aux 查看系统进程的状态（STAT）：（S睡眠、R运行、D不可中断睡眠，等待输入或输出完成、T停止、Z僵尸进程）
+1. ps aux 查看系统进程的状态（STAT）
+
+		S睡眠
+		R运行
+		D不可中断睡眠，等待输入或输出完成
+		T停止
+		Z僵尸进程
 2. 查看/proc/pid***/stack（栈）和/proc/pid***/fd（文件描述符）、lsof -p pid***、/var/log/dmesg或messages看系统日志
 
 23、`top`中进程的信息
@@ -321,6 +338,7 @@ Scanning /dev/mem for entry point.
 /dev/mem: Operation not permitted
 ```
 但是如果通过打开特权模式(`docker run -d --privileged=true centos /bin/bash`)启动容器，那容器可以由有访问所有设备的权限
+```console
 [root@669e2eb40e46 /]# ls /dev/
 autofs           dri        log                 port      sr0     tty15  tty26  tty37  tty48  tty59  ttyS3    vcs6         vhci
 block            fb0        loop-control        ppp       stderr  tty16  tty27  tty38  tty49  tty6   uhid     vcsa         vhost-net
