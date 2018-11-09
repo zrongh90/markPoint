@@ -25,6 +25,31 @@ strace信息如下：
 4505 stat("/etc/supervisor/supervisord.conf", {st_mode=S_IFREG|0644, st_size=9197, ...}) = 0
 ```
 ## 配置supervisor任务
+配置一个任务涉及以下参数：
+```ini
+[program:theprogramname]
+command=/bin/cat              ; the program (relative uses PATH, can take args)
+process_name=%(program_name)s ; process_name expr (default %(program_name)s)
+numprocs=1                    ; number of processes copies to start (def 1)
+directory=/tmp                ; directory to cwd to before exec (def no cwd)
+umask=022                     ; umask for process (default None)
+priority=999                  ; the relative start priority (default 999)
+autostart=true                ; start at supervisord start (default: true)
+startsecs=1                   ; # of secs prog must stay up to be running (def. 1)
+startretries=3                ; max # of serial start failures when starting (default 3)
+autorestart=unexpected        ; when to restart if exited after running (def: unexpected)
+exitcodes=0,2                 ; 'expected' exit codes used with autorestart (default 0,2)
+stopsignal=QUIT               ; signal used to kill process (default TERM)
+stopwaitsecs=10               ; max num secs to wait b4 SIGKILL (default 10)
+stopasgroup=false             ; send stop signal to the UNIX process group (default false)
+killasgroup=false             ; SIGKILL the UNIX process group (def false)
+user=chrism                   ; setuid to this UNIX account to run the program
+redirect_stderr=true          ; redirect proc stderr to stdout (default false)
+stdout_logfile=/a/path        ; stdout log path, NONE for none; default AUTO
+stdout_logfile_maxbytes=1MB   ; max # logfile bytes b4 rotation (default 50MB)
+stdout_logfile_backups=10     ; # of stdout logfile backups (0 means none, default 10)
+stdout_capture_maxbytes=1MB   ; number of bytes in 'capturemode' (default 0)
+```
 
 例如配置一个最简单的任务：
     
