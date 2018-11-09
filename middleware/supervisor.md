@@ -26,5 +26,20 @@ strace信息如下：
 ```
 ## 配置supervisor任务
 
+例如配置一个最简单的任务：
+    
+test任务,执行一个cat命令;
+test2任务，执行一个ls命令
+```ini
+[program:test]
+command=/bin/cat
+[program:test2]
+command=/usr/bin/ls
+```
+```console
+[root@vultr etc]# supervisorctl status
+test                             RUNNING   pid 10169, uptime 0:00:11
+test2                            FATAL     Exited too quickly (process log may have details)
+```
 
 supervisorctl status
