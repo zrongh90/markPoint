@@ -26,6 +26,8 @@ strace信息如下：
 ```
 ## 配置supervisor任务
 配置一个任务涉及以下参数：
+
+主要是command(必须)，directory(任务的根目录)
 ```ini
 [program:theprogramname]
 command=/bin/cat              ; the program (relative uses PATH, can take args)
