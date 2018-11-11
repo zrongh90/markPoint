@@ -3,7 +3,21 @@
 
 
 ## 初始化supervisor配置
+通过echo_supervisord_conf命令可以
 echo_supervisord_conf > /tmp/supervisord.conf
+
+supervisord进程涉及以下配置
+```ini
+[supervisord]
+logfile=/tmp/supervisord.log ; main log file; default $CWD/supervisord.log
+logfile_maxbytes=50MB        ; max main logfile bytes b4 rotation; default 50MB
+logfile_backups=10           ; # of main logfile backups; 0 means none, default 10
+loglevel=info                ; log level; default info; others: debug,warn,trace
+pidfile=/tmp/supervisord.pid ; supervisord pidfile; default supervisord.pid
+nodaemon=false               ; start in foreground if true; default false
+minfds=1024                  ; min. avail startup file descriptors; default 1024
+minprocs=200                 ; min. avail process descriptors;default 200
+```
 
 ## 启动supervisor
 supervisord以默认搜索路径启动supervisor,从以下目录中顺序查找
@@ -25,11 +39,40 @@ strace信息如下：
 4505 stat("/etc/supervisor/supervisord.conf", {st_mode=S_IFREG|0644, st_size=9197, ...}) = 0
 ```
 ## 配置supervisor任务
-配置一个任务涉及以下参数：
+配置一个program涉及以下参数：
 
-- command(必须)
-- directory(任务的根目录)
+- command：必须，program需要为nodaemon，即前台任务
+- directory：任务的根目录
+- priority：任务优先级，无法通过其控制program启动顺序
 
+    数字越少，优先级越高；在start all时先启动，在stop all时先停止
+```ini
+[program:test]
+command=/bin/cat
+priority=10
+
+[program:test2]
+command=/usr/bin/read
+priority=100
+
+[program:test3]
+command=/usr/bin/read
+priority=1
+```
+```console
+[root@vultr tmp]# supervisorctl start all
+test3: started
+test: started
+test2: started
+[root@vultr tmp]# supervisorctl status
+test                             RUNNING   pid 22289, uptime 0:00:05
+test2                            RUNNING   pid 22290, uptime 0:00:05
+test3                            RUNNING   pid 22288, uptime 0:00:05
+[root@vultr tmp]# supervisorctl stop all
+test3: stopped
+test: stopped
+test2: stopped
+```
 - 日志信息
     
     日志包含标准输出日志和标准错误输出日志，常用参数主要有：
