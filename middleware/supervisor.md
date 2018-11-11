@@ -89,6 +89,19 @@ command=/bin/cat
 command=/usr/bin/ls
 ```
 
+## 任务管理
+supervisorctl支持以下命令
+```console
+[root@vultr tmp]# supervisorctl help
+
+default commands (type help <topic>):
+=====================================
+add    exit      open  reload  restart   start   tail   
+avail  fg        pid   remove  shutdown  status  update 
+clear  maintail  quit  reread  signal    stop    version
+```
+
+### 查看任务状态
 
 supervisorctl status
 
@@ -96,4 +109,37 @@ supervisorctl status
 [root@vultr etc]# supervisorctl status
 test                             RUNNING   pid 10169, uptime 0:00:11
 test2                            FATAL     Exited too quickly (process log may have details)
+```
+
+### 更新任务
+修改supervisord.conf配置，将test2任务删除
+```ini
+[program:test]
+command=/bin/cat
+
+;[program:test2]
+;command=/usr/bin/ls
+```
+可通过`supervisor update`更新项目信息，如下：
+```console
+[root@vultr tmp]# supervisorctl update
+test2: stopped
+test2: removed process group
+[root@vultr tmp]# 
+```
+
+
+### 启停任务
+`supervisor start/stop programname` 可以控制项目的启停。
+```console
+[root@vultr tmp]# supervisorctl status
+test                             STOPPED   Nov 11 01:26 AM
+[root@vultr tmp]# supervisorctl start test
+test: started
+[root@vultr tmp]# supervisorctl status test
+test                             RUNNING   pid 21390, uptime 0:00:06
+[root@vultr tmp]# supervisorctl stop test
+test: stopped
+[root@vultr tmp]# supervisorctl status test
+test                             STOPPED   Nov 11 01:27 AM
 ```
