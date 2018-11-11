@@ -27,7 +27,31 @@ strace信息如下：
 ## 配置supervisor任务
 配置一个任务涉及以下参数：
 
-主要是command(必须)，directory(任务的根目录)
+- command(必须)
+- directory(任务的根目录)
+
+- 日志信息
+    
+    日志包含标准输出日志和标准错误输出日志，常用参数主要有：
+
+        stdout/stderr_logfile（位置，默认应该是/tmp目录）
+        stdout/stderr_logfile_maxbytes（大小）
+        stdout/stderr_logfile_backups（数目）
+
+stdout日志信息：
+```ini
+stdout_logfile=/a/path        ; stdout log path, NONE for none; default AUTO
+stdout_logfile_maxbytes=1MB   ; max # logfile bytes b4 rotation (default 50MB)
+stdout_logfile_backups=10     ; # of stdout logfile backups (0 means none, default 10)
+```
+stderr日志信息：
+```ini
+stderr_logfile=/a/path        ; stderr log path, NONE for none; default AUTO
+stderr_logfile_maxbytes=1MB   ; max # logfile bytes b4 rotation (default 50MB)
+stderr_logfile_backups=10     ; # of stderr logfile backups (0 means none, default 10)
+```
+
+具体涉及单个program的配置参考如下：
 ```ini
 [program:theprogramname]
 command=/bin/cat              ; the program (relative uses PATH, can take args)
@@ -53,9 +77,10 @@ stdout_logfile_backups=10     ; # of stdout logfile backups (0 means none, defau
 stdout_capture_maxbytes=1MB   ; number of bytes in 'capturemode' (default 0)
 ```
 
-例如配置一个最简单的任务：
+例如配置一个最简单的任务，只需要提供programname及command信息即可，其他信息使用默认值：
     
-test任务,执行一个cat命令;
+test任务,执行一个cat命令
+
 test2任务，执行一个ls命令
 ```ini
 [program:test]
@@ -63,10 +88,12 @@ command=/bin/cat
 [program:test2]
 command=/usr/bin/ls
 ```
+
+
+supervisorctl status
+
 ```console
 [root@vultr etc]# supervisorctl status
 test                             RUNNING   pid 10169, uptime 0:00:11
 test2                            FATAL     Exited too quickly (process log may have details)
 ```
-
-supervisorctl status
