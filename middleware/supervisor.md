@@ -20,7 +20,7 @@ minprocs=200                 ; min. avail process descriptors;default 200
 ```
 
 ## 启动supervisor
-supervisord以默认搜索路径启动supervisor,从以下目录中顺序查找
+supervisord以默认搜索路径启动supervisor,从以下目录中顺序查找，也可以通过指定 *-c /path/to/supervisord.config*指定配置文件绝对路径。
     
     /usr/etc/supervisord.conf
     /usr/supervisord.conf
