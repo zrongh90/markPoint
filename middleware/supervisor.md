@@ -120,11 +120,11 @@ stdout_logfile_backups=10     ; # of stdout logfile backups (0 means none, defau
 stdout_capture_maxbytes=1MB   ; number of bytes in 'capturemode' (default 0)
 ```
 
-例如配置一个最简单的任务，只需要提供programname及command信息即可，其他信息使用默认值：
+例如配置一个最简单的程序，只需要提供programname及command信息即可，其他信息使用默认值：
     
-test任务,执行一个cat命令
+test程序,执行一个cat命令
 
-test2任务，执行一个ls命令
+test2程序，执行一个ls命令
 ```ini
 [program:test]
 command=/bin/cat
@@ -133,6 +133,13 @@ command=/usr/bin/ls
 ```
 
 ## 任务管理
+
+通过 *-c* 指定supervisor的配置文件或 *-s* 指定supervisor的sock文件/网络位置对supervisor定义的程序进行管理。
+
+- supervisorctl -s unix://tmp/supervisor.sock commands
+- supervisorctl -s http://localhost:9001 commands
+- supervisorctl -c /tmp/suervisord.conf commands
+
 supervisorctl支持以下命令
 ```console
 [root@vultr tmp]# supervisorctl help
@@ -144,7 +151,19 @@ avail  fg        pid   remove  shutdown  status  update
 clear  maintail  quit  reread  signal    stop    version
 ```
 
-### 查看任务状态
+### 停止supervisord
+supervisorctl shutdown
+```console
+[root@vultr supervisor]# ps -ef | grep supervisor
+root     31878     1  0 14:27 ?        00:00:00 /usr/bin/python2 /usr/bin/supervisord
+root     31884 31432  0 14:27 pts/1    00:00:00 grep --color=auto supervisor
+[root@vultr supervisor]# supervisorctl shutdown
+Shut down
+[root@vultr supervisor]# ps -ef | grep supervisor
+root     31892 31432  0 14:27 pts/1    00:00:00 grep --color=auto supervisor
+```
+
+### 查看程序状态
 
 supervisorctl status
 
@@ -154,7 +173,7 @@ test                             RUNNING   pid 10169, uptime 0:00:11
 test2                            FATAL     Exited too quickly (process log may have details)
 ```
 
-### 更新任务
+### 更新程序
 修改supervisord.conf配置，将test2任务删除
 ```ini
 [program:test]
@@ -163,7 +182,7 @@ command=/bin/cat
 ;[program:test2]
 ;command=/usr/bin/ls
 ```
-可通过`supervisor update`更新项目信息，如下：
+可通过`supervisor update`更新程序信息，如下：
 ```console
 [root@vultr tmp]# supervisorctl update
 test2: stopped
@@ -172,8 +191,8 @@ test2: removed process group
 ```
 
 
-### 启停任务
-`supervisor start/stop programname` 可以控制项目的启停。
+### 启停程序
+`supervisor start/stop programname` 可以控制程序的启停。
 ```console
 [root@vultr tmp]# supervisorctl status
 test                             STOPPED   Nov 11 01:26 AM
