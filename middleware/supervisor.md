@@ -31,6 +31,7 @@ supervisord以默认搜索路径启动supervisor,从以下目录中顺序查找�
 
 strace信息如下：
 ```console
+[root@vultr tmp]# strace supervisord
 4500 stat("/usr/etc/supervisord.conf", 0x7ffd94152b40) = -1 ENOENT (No such file or directory)
 4501 stat("/usr/supervisord.conf", 0x7ffd94152b40) = -1 ENOENT (No such file or directory)
 4502 stat("supervisord.conf", 0x7ffd94152b40) = -1 ENOENT (No such file or directory)
