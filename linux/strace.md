@@ -1,6 +1,8 @@
 # strace
 strace常用来跟踪进程执行时的系统调用和所接收的信号。
 
+打开进程的的黑盒，通过跟踪系统调用的线索，大致判断进程在做什么。
+
 每一行都是一条系统调用，等号左边是系统调用的函数名及其参数，右边是该调用的返回值。
 - -o file 将标准错误输出的内容写入file中
 ```console
@@ -60,6 +62,21 @@ clone(child_stack=0, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, chil
 close(7)                                = 0
 write(8, "\0\0\2\276\0", 5)             = 5
 ...
+```
+
+## 组合用法
+- -c -p pid 可以跟踪进程的大部分系统调用的时间统计情况。
+```console
+[root@vultr ~]# strace -c -p 16321
+strace: Process 16321 attached
+^Cstrace: Process 16321 detached
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 62.71    0.000037           4        10           poll
+ 23.73    0.000014          14         1           restart_syscall
+ 13.56    0.000008           1        11           wait4
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.000059                    22           total
 ```
 
 

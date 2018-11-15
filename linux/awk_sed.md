@@ -38,3 +38,6 @@ awk '{for(i=1;i<NF;i++) {if($i ~ "Xmx" || $i ~ "wasserver" || $i ~ "wasprofile")
 awk 'BEGIN{total=0}{for(i=1;i<=NF;i++) total=total+$i} END{print total}'
 
 # sed
+截取某个时间段的日志
+
+sed -n '/11-14 13:50/,/11-14 13:51/g' nts-pims-padis-xl.out
