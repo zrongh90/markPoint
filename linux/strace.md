@@ -79,8 +79,40 @@ strace: Process 16321 attached
 100.00    0.000059                    22           total
 ```
 
+## 例子
+### 分析进程异常退出原因
 
+假设有一个一直在运行的进程run.sh，运行一段时间后自动死掉，没有明确的错误信息输出。
 
+思路： 可以通过`strace -o run.strace -p run.sh的pid` 定位程序运行过程中的系统调用信息。
+```console
+[root@vultr ~]# ps -ef | grep run
+root     16126 15769  0 12:11 pts/1    00:00:00 /bin/bash ./run.sh
+[root@vultr ~]# strace -o run.strace -p 16126
+strace: Process 16126 attached
+[root@vultr ~]# ls
+run.sh  run.trace  super.strace
+[root@vultr ~]# view run.trace
+...
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+rt_sigaction(SIGINT, {0x43e800, [], SA_RESTORER, 0x7f3fa6cea2f0}, {SIG_DFL, [], SA_RESTORER, 0x7f3fa6cea2f0}, 8) = 0
+wait4(-1,  <unfinished ...>
++++ killed by SIGKILL +++
+```
+从strace的结果观察，进程run.sh是被信号KILL给中止的，可以发掘是什么程序产生kill信号中断该进程。
 
-
-
+正常情况下，应用退出是通过调用exit_group(exit_code)退出。
+```console
+write(1, "sleep\n", 6)                  = 6
+rt_sigprocmask(SIG_BLOCK, NULL, [], 8)  = 0
+rt_sigprocmask(SIG_BLOCK, NULL, [], 8)  = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+rt_sigprocmask(SIG_BLOCK, NULL, [], 8)  = 0
+read(255, "", 88)                       = 0
+exit_group(0)                           = ?
++++ exited with 0 +++
+```
