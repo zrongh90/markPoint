@@ -4,13 +4,13 @@ awk把输入流看作一连串记录的集合，每条记录都可进一步细�
 
 ## awk程序模式
 
-- pattern { action } 	模式匹配，执行操作
+- pattern { action }    模式匹配，执行操作
 
 - pattern-----------如果模式匹配，则打印记录
 
-- ---------{ action }	针对每一条记录（则每一行），执行操作
+- ---------{ action }   针对每一条记录（则每一行），执行操作
 
-      FNR：输入文件记录数 
+      FNR：输入文件记录数
       NR：当前处理的记录数
       NF：当前记录的字段数
       FS：输入字段分隔符（默认" "），只有在它超过一个字符时，才被视为正则表达式
@@ -26,18 +26,23 @@ BEGIN { recordC = 0 }
 #对于每一条记录，打印记录对应的字段数
       { print NF }
 #打印文件的记录数，则行数
+
 END { recordC = FNR ; print recordC }'
 
 #以/为分割符，打印最后一个记录
+
 awk 'BEGIN { FS="/" } { print $(NF) }'
 
 #以" "为分割符，循环结果，打印满足条件的字段
+
 awk '{for(i=1;i<NF;i++) {if($i ~ "Xmx" || $i ~ "wasserver" || $i ~ "wasprofile") print $i}}'
 
 #循环将每行的结果相加
+
 awk 'BEGIN{total=0}{for(i=1;i<=NF;i++) total=total+$i} END{print total}'
 
 # sed
+
 截取某个时间段的日志
 
 sed -n '/11-14 13:50/,/11-14 13:51/g' nts-pims-padis-xl.out

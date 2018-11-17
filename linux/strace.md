@@ -1,4 +1,5 @@
 # strace
+
 strace常用来跟踪进程执行时的系统调用和所接收的信号。
 
 打开进程的的黑盒，通过跟踪系统调用的线索，大致判断进程在做什么。
@@ -6,7 +7,9 @@ strace常用来跟踪进程执行时的系统调用和所接收的信号。
 不过要谨记 **“strace是跟踪系统调用”** ，如果进程是由于用户态的原因导致异常，strace分析就无参考价值了。
 
 每一行都是一条系统调用，等号左边是系统调用的函数名及其参数，右边是该调用的返回值。
+
 - -o file 将标准错误输出的内容写入file中
+
 ```console
 [root@vultr ~]# strace -o ls.trace ls 
 [root@vultr ~]# view ls.trace
@@ -17,7 +20,9 @@ access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
 open("/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
 ...
 ```
+
 - -c 统计时间、syscall数目、错误调用数目、syscall名称
+
 ```console
 [root@vultr ~]# strace -c ls
 % time     seconds  usecs/call     calls    errors syscall
@@ -30,7 +35,9 @@ open("/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
 ------ ----------- ----------- --------- --------- ----------------
 100.00    0.000551                   107         1 total
 ```
+
 - -tt 给出系统调用的时间戳
+
 ```console
 [root@vultr ~]# strace -tt -o ls.trace.tt ls 
 [root@vultr ~]# view ls.trace.tt
@@ -50,7 +57,9 @@ open("/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
      0.000243 access("/etc/ld.so.preload", R_OK) = -1 ENOENT (No such file or directory)
      0.000199 open("/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
 ```
+
 - -p pid 跟踪进程号的系统调用情况
+
 ```console
 [root@vultr ~]# strace -p 674
 strace: Process 674 attached
@@ -67,7 +76,9 @@ write(8, "\0\0\2\276\0", 5)             = 5
 ```
 
 ## 组合用法
+
 - -c -p pid 可以跟踪进程的大部分系统调用的时间统计情况。
+
 ```console
 [root@vultr ~]# strace -c -p 16321
 strace: Process 16321 attached
@@ -82,11 +93,13 @@ strace: Process 16321 attached
 ```
 
 ## 例子
+
 ### 分析进程异常退出原因
 
 假设有一个一直在运行的进程run.sh，运行一段时间后自动死掉，没有明确的错误信息输出。
 
 思路： 可以通过`strace -o run.strace -p run.sh的pid` 定位程序运行过程中的系统调用信息。
+
 ```console
 [root@vultr ~]# ps -ef | grep run
 root     16126 15769  0 12:11 pts/1    00:00:00 /bin/bash ./run.sh
@@ -103,9 +116,11 @@ rt_sigaction(SIGINT, {0x43e800, [], SA_RESTORER, 0x7f3fa6cea2f0}, {SIG_DFL, [], 
 wait4(-1,  <unfinished ...>
 +++ killed by SIGKILL +++
 ```
+
 从strace的结果观察，进程run.sh是被信号KILL给中止的，可以发掘是什么程序产生kill信号中断该进程。
 
 正常情况下，应用退出是通过调用exit_group(exit_code)退出。
+
 ```console
 write(1, "sleep\n", 6)                  = 6
 rt_sigprocmask(SIG_BLOCK, NULL, [], 8)  = 0
