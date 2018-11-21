@@ -13,6 +13,7 @@
         - [quick_point](https://github.com/zrongh90/markPoint/blob/master/linux/quick_point.md)
         - [awk and sed](https://github.com/zrongh90/markPoint/blob/master/linux/awk_sed.md)
         - [strace](https://github.com/zrongh90/markPoint/blob/master/linux/strace.md)
+        - [sysdig]
         - [swap](https://github.com/zrongh90/markPoint/blob/master/linux/swap.md)
 - [性能分析思路](https://github.com/zrongh90/markPoint/blob/master/linux/perform_analysis.md)
 - [df hang住](https://github.com/zrongh90/markPoint/blob/master/linux/df_handup.md)
