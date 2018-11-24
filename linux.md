@@ -241,52 +241,65 @@ net.ipv4.tcp_mem				/proc/sys/net/ipv4/tcp_mem
 35、进入单用户模式，在grub节修改kernel行，在末尾添加single
 
 36、启动图形界面
-1. AIX
-	1. 执行/etc/rc.dt
 
-2. linux 
-	1. 修改/etc/gdm/customer.conf：在[xdcmp]下增加Port=177和Enable=1 
-	2. 修改root的.bash_profile添加export DISPLAY=X.X.X.X:0.0
-	3. 重启runlevel 3和5（即init 3; init 5。注意重启runlevel对应用的影响）
-		   
+1. AIX
+
+    1. 执行/etc/rc.dt
+
+2. linux
+
+    1. 修改/etc/gdm/customer.conf：在[xdcmp]下增加Port=177和Enable=1 
+
+    2. 修改root的.bash_profile添加export DISPLAY=X.X.X.X:0.0
+
+    3. 重启runlevel 3和5（即init 3; init 5。注意重启runlevel对应用的影响）
+
 37、iostat分析
 
 38、vmstat分析
 
 39、通过`uptime`分析系统负载,平均负载指特定时间间隔内运行队列中的平均进程数。
 
-	$ uptime
-	09:22AM   up 251 days,  14:03,  3 users,  load average: 2.61, 1.99, 2.50
-	                                                       1分钟  5分钟  15分钟
-	per cpu 活动进程<3    性能良好
-	per cpu 活动进程>5    性能问题
-    上述系统为8C，所有平均负载不大于3*8=24表明系统性能良好
+```console
+$ uptime
+09:22AM   up 251 days,  14:03,  3 users,  load average: 2.61, 1.99, 2.50
+                                                        一      五   十五   分钟  
+```
+
+per cpu 活动进程<3    性能良好
+
+per cpu 活动进程>5    性能问题
+
+上述系统为8C，所有平均负载不大于3*8=24表明系统性能良好
 
 40、使用`rsync`进行数据的同步，一般使用-auv参数。
 
 1. 使用rsync SRC DEST，进行本地数据的拷贝
 2. 使用rsync SRC [USER@]host:DEST 或 rsync [USER@]host:SRC DEST，进行远程数据的拷贝
-	-a: 等于-rlptgoD，-r递归,-l保留软链接,-p保留文件权限,-t保留时间信息,-g保留组信息,-o保留用户信息,-D保留设备文件信息
 
-	-u, --update：仅仅更新数据
+        -a: 等于-rlptgoD，-r递归,-l保留软链接,-p保留文件权限,-t保留时间信息,-g保留组信息,-o保留用户信息,-D保留设备文件信息
 
-	-v, --verbose：详细模式
+       -u, --update：仅仅更新数据
 
-	--exclude=PATTERN：排除模式,例如--exclude="test.log"
+       -v, --verbose：详细模式
 
-	--exclude-from=FILE：排除文件中指定模式，例如--exclude-from="/home/tmpusr/ex.pattern"
+       --exclude=PATTERN：排除模式,例如--exclude="test.log"
+
+       --exclude-from=FILE：排除文件中指定模式，例如--exclude-from="/home/tmpusr/ex.pattern"
 
 lsof常用方法
 
-	lsof -P -i4 所有TCP4上的网络连接
-	lsof -I @192.168.43.251 所有关于IP的连接
-	lsof -I :3306确认端口占用情况
-	lsof <path/to/file> 确认文件占用情况
-	lsof -p pid 确认进程打开文件情况
-	lsof +d <path/to/file> 确认目录下的文件打开情况
+- lsof -P -i4 所有TCP4上的网络连接
+- lsof -I @192.168.43.251 所有关于IP的连接
+- lsof -I :3306确认端口占用情况
+- lsof <path/to/file> 确认文件占用情况
+- lsof -p pid 确认进程打开文件情况
+- lsof +d <path/to/file> 确认目录下的文件打开情况
 
 查看系统信息，亲测（例如底层机器型号或虚拟机），在容器中使用报错
-	`dmidecode -t 1`
+
+`dmidecode -t 1`
+
 ```console
 [root@vultr ~]# dmidecode -t 1
 # dmidecode 3.0
@@ -295,13 +308,13 @@ SMBIOS 2.8 present.
 
 Handle 0x0100, DMI type 1, 27 bytes
 System Information
-	Manufacturer: QEMU
-	Product Name: Standard PC (i440FX + PIIX, 1996)
-	Version: pc-i440fx-3.0
-	Serial Number: Not Specified
-	UUID: F3B6F3A2-305C-4CA0-A718-EF246FFDEF10
-	Wake-up Type: Power Switch
-	SKU Number: Not Specifie
+Manufacturer: QEMU
+Product Name: Standard PC (i440FX + PIIX, 1996)
+Version: pc-i440fx-3.0
+Serial Number: Not Specified
+UUID: F3B6F3A2-305C-4CA0-A718-EF246FFDEF10
+Wake-up Type: Power Switch
+SKU Number: Not Specifie
 
 [root@zrongh ~]# dmidecode -t 1
 # dmidecode 3.0
@@ -310,16 +323,18 @@ SMBIOS 2.5 present.
 
 Handle 0x0001, DMI type 1, 27 bytes
 System Information
-	Manufacturer: innotek GmbH
-	Product Name: VirtualBox
-	Version: 1.2
-	Serial Number: 0
-	UUID: 10866277-427E-4EBC-BBC4-DBF1C8ACABF1
-	Wake-up Type: Power Switch
-	SKU Number: Not Specified
-	Family: Virtual Machine
+Manufacturer: innotek GmbH
+Product Name: VirtualBox
+Version: 1.2
+Serial Number: 0
+UUID: 10866277-427E-4EBC-BBC4-DBF1C8ACABF1
+Wake-up Type: Power Switch
+SKU Number: Not Specified
+Family: Virtual Machine
 ```
+
 在容器中运行报错，如下：
+
 ```console
 [root@820a0cc6702e /]# dmidecode 
 # dmidecode 3.0
@@ -329,6 +344,7 @@ Scanning /dev/mem for entry point.
 根据错误信息，将主机的/dev/mem映射到容器中（此处有坑）
 docker run -it --device /dev/mem:/dev/mem centos /bin/bash
 继续执行，提示另外一个错误Operation not permitted，这次是docker权限的设置问题，默认docker的容器是以unprivileged的方式进行运行，无法访问任何设备，如下：
+
 ```console
 [root@50ccf0622c07 dev]# ls
 core  fd  full  mqueue  null  ptmx  pts  random  shm  stderr  stdin  stdout  tty  urandom  zero
@@ -337,7 +353,9 @@ core  fd  full  mqueue  null  ptmx  pts  random  shm  stderr  stdin  stdout  tty
 Scanning /dev/mem for entry point.
 /dev/mem: Operation not permitted
 ```
+
 但是如果通过打开特权模式(`docker run -d --privileged=true centos /bin/bash`)启动容器，那容器可以由有访问所有设备的权限
+
 ```console
 [root@669e2eb40e46 /]# ls /dev/
 autofs           dri        log                 port      sr0     tty15  tty26  tty37  tty48  tty59  ttyS3    vcs6         vhci
@@ -353,7 +371,9 @@ cpu_dma_latency  initctl    null                shm       tty12   tty23  tty34  
 crash            input      nvram               snapshot  tty13   tty24  tty35  tty46  tty57  ttyS1  vcs4     vfio
 disk             kmsg       oldmem              snd       tty14   tty25  tty36  tty47  tty58  ttyS2  vcs5     vga_arbiter
 ```
+
 此时`dmidecode -t 1`命令运行正常.
+
 ```console
 [root@669e2eb40e46 /]# dmidecode -t 1
 # dmidecode 3.0
@@ -362,17 +382,19 @@ SMBIOS 2.8 present.
 
 Handle 0x0100, DMI type 1, 27 bytes
 System Information
-	Manufacturer: QEMU
-	Product Name: Standard PC (i440FX + PIIX, 1996)
-	Version: pc-i440fx-3.0
-	Serial Number: Not Specified
-	UUID: F3B6F3A2-305C-4CA0-A718-EF246FFDEF10
-	Wake-up Type: Power Switch
-	SKU Number: Not Specified
-	Family: Not Specified
+Manufacturer: QEMU
+Product Name: Standard PC (i440FX + PIIX, 1996)
+Version: pc-i440fx-3.0
+Serial Number: Not Specified
+UUID: F3B6F3A2-305C-4CA0-A718-EF246FFDEF10
+Wake-up Type: Power Switch
+SKU Number: Not Specified
+Family: Not Specified
 ```
+
 最后，如果需要以特权并且使用systemctl进行容器中进程的管理，需要以下启动方式
 以服务方式启动docker `docker run -d --privileged centos /usr/sbin/init`
+
 ```console
 [root@vultr dev]# ls -lrt /usr/sbin/init
 lrwxrwxrwx. 1 root root 22 Jun  5 21:39 /usr/sbin/init -> ../lib/systemd/systemd
