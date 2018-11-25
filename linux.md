@@ -1,5 +1,7 @@
+# LIUNX常用知识
+
 1、`whatis`快速查出命令的用途
- 
+
 `whereis` 快速定位命令的位置
 
 2、`basename` - strip directory and suffix from filenames
@@ -12,19 +14,21 @@
 5、'STRING'将会阻止STRING中所有特殊字符的解释
 
 6、在括号中的命令列表，作为一个子shell运行。
-	例如 
+    例如
+
 ```shell
-	a=123
-	( a=321; )
-	echo "$a" #结果为123
+    a=123
+    ( a=321; )
+    echo "$a" #结果为123
 ```
 
 7、数组初始化方式
+
 ```shell
-	Array=(element1 element2 element3)
+    Array=(element1 element2 element3)
 ```
 
-8、使用`a=$(echo test)`机制来进行变量赋值(这是一种比后置引用(反引号`` a=`echo test` ``)更新的一种方法).
+8、使用`a=$(echo test)`机制来进行变量赋值(这是一种比后置引用(反引号``a=`echo test` ``)更新的一种方法).
 
 9、Bash变量不区分类型，关键因素是变量值是否只有数字
 
@@ -37,42 +41,44 @@
 
 13、${}替换规则：
 
-	${var#*/}:删除第一个/前的所有字符
+    ${var#*/}:删除第一个/前的所有字符
 
-	${var##*/}:删除最后一个/前的所有字符
+    ${var##*/}:删除最后一个/前的所有字符
 
-	${var%/*}:删除最后一个/右边的字符
+    ${var%/*}:删除最后一个/右边的字符
 
-	${var%%/*}}:删除第一个/右边的字符
+    ${var%%/*}}:删除第一个/右边的字符
 
-	${var-defaultVar}:测试$var是否为空，为空则返回defaultVar
+    ${var-defaultVar}:测试$var是否为空，为空则返回defaultVar
 
-	${var=defaultVar}:测试$var是否为空，为空则设值后返回
-	
+    ${var=defaultVar}:测试$var是否为空，为空则设值后返回
+
 14、在`tar`的过程中，可以通过添加--remove-files参数删除打包前的源文件
 
-	tar -zcvf destFile.tar.gz sourceFiles --remove-files
+    tar -zcvf destFile.tar.gz sourceFiles --remove-files
 
 15、文件信息
 
-	etc —— 配置文件
+    etc —— 配置文件
 
-	skel —— home目录建立，该目录初始化
+    skel —— home目录建立，该目录初始化
 
-	sysconfig —— 网络，时间，键盘配置目录
+    sysconfig —— 网络，时间，键盘配置目录
 
-	opt —— 额外安装软件的目录
+    opt —— 额外安装软件的目录
 
 16、mount iso
 
 1. linux
+
 ```console
-	mount -o loop /home/zrongh/test.iso /mnt
+mount -o loop /home/zrongh/test.iso /mnt
 ```
 
 2. AIX
+
 ```console
-	loopmount -i test.iso -o "-V cdrfs -o ro" -m /mnt
+loopmount -i test.iso -o "-V cdrfs -o ro" -m /mnt
 ```
 
 17、vim多行注释
@@ -137,19 +143,19 @@ swapon -a                         #打开swap
 
 23、`top`中进程的信息
 
-	VIRT：进程使用的虚拟内存总量
-	RES：进程在使用的、未被换出的物理内存大小
-	SHR：共享内存的大小
-	使用指南：
-	1）数字键1：每个逻辑CPU状态
-	2）键盘b：高亮状态
-	3）键盘x：进程排序（默认按照%CPU),可通过shift + <或>改变
-	4）键盘c：切换显示命令行（是否全显示）
-	5）键盘P：按照CPU使用率排序
-	6）键盘M：按照内存使用率排序
-	7）键盘f：添加或删除当前显示项
-	8）键盘o：改变列显示的位置
-	
+    VIRT：进程使用的虚拟内存总量
+    RES：进程在使用的、未被换出的物理内存大小
+    SHR：共享内存的大小
+    使用指南：
+    1）数字键1：每个逻辑CPU状态
+    2）键盘b：高亮状态
+    3）键盘x：进程排序（默认按照%CPU),可通过shift + <或>改变
+    4）键盘c：切换显示命令行（是否全显示）
+    5）键盘P：按照CPU使用率排序
+    6）键盘M：按照内存使用率排序
+    7）键盘f：添加或删除当前显示项
+    8）键盘o：改变列显示的位置
+
 24、用户管理
 
 	`useradd`默认参数主要涉及/etc/login.defs和/etc/default/useradd。
@@ -183,23 +189,24 @@ swapon -a                         #打开swap
 
     密码及锁定策略/etc/pam.d/system-auth
 
-	auth模块：身份识别
-	auth        required      pam_tally2.so    onerr=fail deny=5 unlock_time=300 even_deny_root root_unlock_time=300
+    auth模块：身份识别
+    auth        required      pam_tally2.so    onerr=fail deny=5 unlock_time=300 even_deny_root root_unlock_time=300
 
-	password模块：密码策略
-	password    requisite      pam_cracklib.so try_first_pass retry=5 minlen=8 dcredit=-1  lcredit=-1 enforce_for_root
+    password模块：密码策略
+    password    requisite      pam_cracklib.so try_first_pass retry=5 minlen=8 dcredit=-1  lcredit=-1 enforce_for_root
 
-	ssh是否允许root登录/etc/ssh/sshd_config中的PermitRootLogin no
-	
+    ssh是否允许root登录/etc/ssh/sshd_config中的PermitRootLogin no
+
 30、切记~/.ssh/authorized_keys文件的权限会影响是否可以通过密钥连接，目标权限为0600
 
 31、`sysctl`：可以修改正在运行中的linux系统接口，包括tcp/ip堆栈和虚拟内存系统的选项
 
-	sysctl -a 列出当前生效的值
-	sysctl -w kernel.hostname="test" 临时修改系统参数配置
-	修改/etc/sysctl.conf文件 永久修改系统参数设置
-	
+    sysctl -a 列出当前生效的值
+    sysctl -w kernel.hostname="test" 临时修改系统参数配置
+    修改/etc/sysctl.conf文件 永久修改系统参数设置
+
 32、tcpip的接受发送buffer
+
 ```console
 sysctl -a
 
@@ -207,29 +214,30 @@ net.ipv4.tcp_rmem				/proc/sys/net/ipv4/tcp_rmem
 net.ipv4.tcp_wmem				/proc/sys/net/ipv4/tcp_wmem
 net.ipv4.tcp_mem				/proc/sys/net/ipv4/tcp_mem
 ```
-	
+
 33、通过`yum`环境确定需要安装的rpm包的依赖关系
 
 1. yum deplist rpm_name     #查询rpm所需依赖包
 2. yumdownloader rpm_name   #下载目标rpm包
-```shell
+
+```console
 [tmpusr@ansible ~]$ yum deplist gcc-c++.x86_64 | grep provider | uniq | grep -v i686
-	provider: bash.x86_64 4.2.46-21.el7_3
-	provider: info.x86_64 5.1-4.el7
-	provider: binutils.x86_64 2.25.1-22.base.el7
-	provider: cpp.x86_64 4.8.5-11.el7
-	provider: glibc-devel.x86_64 2.17-157.el7_3.1
-	provider: glibc.x86_64 2.17-157.el7_3.1
-	provider: libgcc.x86_64 4.8.5-11.el7
-	provider: libgcc.x86_64 4.8.5-11.el7
-	provider: gmp.x86_64 1:6.0.0-12.el7_1
-	provider: libgomp.x86_64 4.8.5-11.el7
-	provider: libgomp.x86_64 4.8.5-11.el7
-	provider: glibc.x86_64 2.17-157.el7_3.1
-	provider: libmpc.x86_64 1.0.1-3.el7
-	provider: mpfr.x86_64 3.1.1-4.el7
-	provider: zlib.x86_64 1.2.7-17.el7
-	provider: glibc.x86_64 2.17-157.el7_3.1
+provider: bash.x86_64 4.2.46-21.el7_3
+provider: info.x86_64 5.1-4.el7
+provider: binutils.x86_64 2.25.1-22.base.el7
+provider: cpp.x86_64 4.8.5-11.el7
+provider: glibc-devel.x86_64 2.17-157.el7_3.1
+provider: glibc.x86_64 2.17-157.el7_3.1
+provider: libgcc.x86_64 4.8.5-11.el7
+provider: libgcc.x86_64 4.8.5-11.el7
+provider: gmp.x86_64 1:6.0.0-12.el7_1
+provider: libgomp.x86_64 4.8.5-11.el7
+provider: libgomp.x86_64 4.8.5-11.el7
+provider: glibc.x86_64 2.17-157.el7_3.1
+provider: libmpc.x86_64 1.0.1-3.el7
+provider: mpfr.x86_64 3.1.1-4.el7
+provider: zlib.x86_64 1.2.7-17.el7
+provider: glibc.x86_64 2.17-157.el7_3.1
 ```
 
 34、/etc/security/limits.conf限制了用户的可使用资源，修改用户的打开文件资源限制。
