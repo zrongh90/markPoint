@@ -1,5 +1,21 @@
 # LIUNX常用知识
 
+## 常用初始化内容
+
+- 安装man-pages，lsof，psmisc(killall、pstree、fuser)
+
+- 安装net-tools
+
+    提供netstat、route、ifconfig等centos 6常用命令，在centos 7被ip的命令替代。
+
+        netstat  —— ss
+        route    —— ip route
+        ifconfig —— ip addr
+- 安装cheat(提供命令速查)
+
+    需要安装yum install python-pip然后pip install cheat
+
+
 1、`whatis`快速查出命令的用途
 
 `whereis` 快速定位命令的位置
@@ -304,7 +320,9 @@ lsof常用方法
 - lsof -p pid 确认进程打开文件情况
 - lsof +d <path/to/file> 确认目录下的文件打开情况
 
-查看系统信息，亲测（例如底层机器型号或虚拟机），在容器中使用报错
+## dmidecode查看系统信息
+
+亲测（例如底层机器型号或虚拟机），在容器中使用报错
 
 `dmidecode -t 1`
 
@@ -349,6 +367,7 @@ Family: Virtual Machine
 Scanning /dev/mem for entry point.
 /dev/mem: No such file or directory
 ```
+
 根据错误信息，将主机的/dev/mem映射到容器中（此处有坑）
 docker run -it --device /dev/mem:/dev/mem centos /bin/bash
 继续执行，提示另外一个错误Operation not permitted，这次是docker权限的设置问题，默认docker的容器是以unprivileged的方式进行运行，无法访问任何设备，如下：
@@ -408,4 +427,48 @@ Family: Not Specified
 lrwxrwxrwx. 1 root root 22 Jun  5 21:39 /usr/sbin/init -> ../lib/systemd/systemd
 ```
 
+## 文件删除空间不释放
 
+linux文件系统维护着指向每个文件的链接的计数，在该文件最后一个链接被删除前不释放该文件的数据块，这就导致了一个问题**“rm删除了文件但df仍没变化”**。
+
+```console
+[root@8498cde5b38f tmp]# ls -lh
+total 2.0G
+-rw-r--r--. 1 root root 2.0G Nov 25 08:53 test.log
+[root@8498cde5b38f tmp]# df
+Filesystem     1K-blocks     Used Available Use% Mounted on
+overlay         20616252 10490724   9060632  54% /
+[root@8498cde5b38f tmp]# rm test.log
+rm: remove regular file 'test.log'? y
+[root@8498cde5b38f tmp]# df
+Filesystem     1K-blocks    Used Available Use% Mounted on
+overlay         20616252 10490732   9060624  54% /
+```
+
+解决思路主要集中在两个方面：清理链接、truncate文件
+
+### 清理链接
+
+通过lsof方式可以确认文件被什么进程打开
+
+```console
+[root@8498cde5b38f tmp]# lsof | grep test.log
+tail     41 root    3r   REG   0,38 2097152000 390925 /tmp/test.log (deleted)
+tail     42 root    3r   REG   0,38 2097152000 390925 /tmp/test.log (deleted)
+tail     43 root    3r   REG   0,38 2097152000 390925 /tmp/test.log (deleted)
+tail     44 root    3r   REG   0,38 2097152000 390925 /tmp/test.log (deleted)
+tail     45 root    3r   REG   0,38 2097152000 390925 /tmp/test.log (deleted)
+tail     46 root    3r   REG   0,38 2097152000 390925 /tmp/test.log (deleted)
+```
+
+从输出结果看，test.log文件已经删除，但是它被tail进程占用，导致指向文件的链接数不为0，因此文件空间不释放。只能通过杀掉访问文件的进程（即tail）进程或者重启操作系统，空间会自动释放。
+
+### truncate文件
+
+对进程(tomcat、httpd、nginx等程序)不断对文件写操作的文件，最好的处理方式不是将文件链接删除触发系统释放数据块，而是通过对文件进行truncate，在线清理文件内容。
+
+```console
+[root@8498cde5b38f tmp]# cat /dev/null > test.log
+或
+[root@8498cde5b38f tmp]# echo "" > test.log
+```
