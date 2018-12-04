@@ -472,3 +472,62 @@ tail     46 root    3r   REG   0,38 2097152000 390925 /tmp/test.log (deleted)
 或
 [root@8498cde5b38f tmp]# echo "" > test.log
 ```
+
+## 通过设置suid位让
+
+对于系统的每个用户，它没有权限去更新/etc/passwd文件，因为文件权限如下：
+
+```console
+[root@vultr etc]# ls -lrt /etc/passwd
+-rw-r--r--. 1 root root 1025 Nov 27 13:28 /etc/passwd
+[root@vultr etc]# ls -lrt /etc/shadow
+----------. 1 root root 585 Nov 27 13:28 /etc/shadow
+```
+
+只有root用户有权限去更改这个文件，但普通用户也能修改
+
+## 调整内核参数
+
+### 临时调整(重启后失效)
+
+- 修改/proc/sys的内核映射文件
+
+/proc/sys下的特殊文件可以让用户去查看或者设置内核运行时的参数
+
+- sysctl命令修改
+
+可通过sysctl -a命令列出所有的内核参数，通过
+`sysctl key=value`
+的方式更新该配置。
+
+例如，修改响应icmp包的内核参数icmp_echo_ignore_all
+
+```console
+[root@vultr ipv4]# ping 45.77.26.164
+PING 45.77.26.164 (45.77.26.164) 56(84) bytes of data.
+64 bytes from 45.77.26.164: icmp_seq=1 ttl=64 time=0.152 ms
+64 bytes from 45.77.26.164: icmp_seq=2 ttl=64 time=0.122 ms
+^C
+--- 45.77.26.164 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1000ms
+rtt min/avg/max/mdev = 0.122/0.137/0.152/0.015 ms
+[root@vultr ipv4]# sysctl -a 2> /dev/null | grep icmp_echo_ignore_all
+net.ipv4.icmp_echo_ignore_all = 0
+[root@vultr ipv4]# cat /proc/sys/net/ipv4/icmp_echo_ignore_all
+0
+[root@vultr ipv4]# sysctl net.ipv4.icmp_echo_ignore_all=1
+net.ipv4.icmp_echo_ignore_all = 1
+[root@vultr ipv4]# cat /proc/sys/net/ipv4/icmp_echo_ignore_all
+1
+[root@vultr ipv4]# ping 45.77.26.164
+PING 45.77.26.164 (45.77.26.164) 56(84) bytes of data.
+
+--- 45.77.26.164 ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss, time 999ms
+```
+
+### 永久调整
+
+修改/etc/sysctl.conf文件
+net.ipv4.icmp_echo_ignore_all = 1
+重启或者sysctl -p(read values from file)生效
