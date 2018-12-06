@@ -85,6 +85,25 @@ awk 'BEGIN{total=0}{for(i=1;i<=NF;i++) total=total+$i} END{print total}'
 
 ## sed
 
+`sed [-n][-e script]...[-f script_file]...[file...]`
+
 截取某个时间段的日志
 
 sed -n '/11-14 13:50/,/11-14 13:51/g' nts-pims-padis-xl.out
+
+`sed -n 's/^/<h1>/;s/$/<\/h1>/p;q' rime.txt`
+
+上面这段代码完成了以下内容：
+
+- 使用-n参数只打印script处理后的结果
+- `s/^/<h1>/`在行首插入`<h1>`标签
+- `;`用于分割命令
+- `s/$/<\/h1>/p`在行尾插入`<\h1>`标签并打印
+- `q`完成前面script定义的操作后退出
+
+```console
+[root@vultr ~]# head -1 rime.txt 
+THE RIME OF THE ANCYENT MARINERE, IN SEVEN PARTS.
+[root@vultr ~]# sed -n 's/^/<h1>/;s/$/<\/h1>/p;q' rime.txt 
+<h1>THE RIME OF THE ANCYENT MARINERE, IN SEVEN PARTS.</h1>
+```
