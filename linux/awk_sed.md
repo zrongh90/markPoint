@@ -107,3 +107,36 @@ THE RIME OF THE ANCYENT MARINERE, IN SEVEN PARTS.
 [root@vultr ~]# sed -n 's/^/<h1>/;s/$/<\/h1>/p;q' rime.txt 
 <h1>THE RIME OF THE ANCYENT MARINERE, IN SEVEN PARTS.</h1>
 ```
+
+`sed -nE '/\b(the|The|THE)\b/p' rime.txt`
+
+上面这段代码完成了以下内容：
+
+- 使用-n参数只打印script处理后的结果
+- `/\b(the|The|THE)\b/p`匹配带边界的the/The/THE的三种模式并`p`打印
+- 命令的效果类似于`grep -E '\b(the|The|THE)\b' rime.txt`
+
+```console
+[root@vultr ~]# grep -E '\b(the|The|THE)\b' rime.txt | wc -l
+259
+[root@vultr ~]# sed -nE '/\b(the|The|THE)\b/p' rime.txt | wc -l
+259
+```
+
+### sed后向引用
+
+当正则表达式的一个模式的部分或全部字符由一队括号分组时，它对内容进行捕获并临时存储在内存中。可以通过后向应用的方式对内存中的捕获分组进行引用，例如 **\1**引用第一个捕获分组。
+
+`sed -En 's/(It is) (an ancyent Marinere)/\2 \1/p' rime.txt`
+
+上面这段代码完成了以下内容：
+
+- 捕获It is和an ancyent Marinere的内容并放入内存
+- `\2 \1`方式将捕获的内容倒序，并以`p`结尾表示打印该结果
+
+```console
+[root@vultr ~]# sed -En '/(It is) (an ancyent Marinere)/p' rime.txt
+     It is an ancyent Marinere,
+[root@vultr ~]# sed -En 's/(It is) (an ancyent Marinere)/\2 \1/p' rime.txt
+     an ancyent Marinere It is,
+```
