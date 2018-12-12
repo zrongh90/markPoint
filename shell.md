@@ -6,14 +6,16 @@
 ```
 
 2. `echo -n` 不换行，`echo -e` 转义字符生效
+
 ```console
 [root@vultr ~]# echo -n 'test'
 test[root@vultr ~]# echo -e 'test\r'
 test
 ```
-3. $PATH的空项目表示当前目录
 
-4. 开头^,结尾$
+3 $PATH的空项目表示当前目录
+
+4 开头^,结尾$
 
 5. 字符串判定用双引号
 
