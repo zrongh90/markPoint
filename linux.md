@@ -531,3 +531,19 @@ PING 45.77.26.164 (45.77.26.164) 56(84) bytes of data.
 修改/etc/sysctl.conf文件
 net.ipv4.icmp_echo_ignore_all = 1
 重启或者sysctl -p(read values from file)生效
+
+### 常用参数
+
+| 配置项 | 意义 |
+| ------ | ------ |
+| net.ipv4.icmp_echo_ignore_all | 忽略icmp包 |
+| net.ipv4.tcp_fin_timeout | 等待最后的fin包的秒数 |
+| net.ipv4.ip_local_port_range | 建立连接期间的本地端口范围 |
+
+## 通过zip加密压缩文件
+
+`zip -j -e result.zip source.file -P password`
+
+- `-j`：junk-paths,丢弃文件路径
+- `-e`：加密文件
+- `-P`：加密的密码
