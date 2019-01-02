@@ -89,7 +89,7 @@ awk 'BEGIN{total=0}{for(i=1;i<=NF;i++) total=total+$i} END{print total}'
 
 截取某个时间段的日志
 
-sed -n '/11-14 13:50/,/11-14 13:51/g' nts-pims-padis-xl.out
+sed -n '/11-14 13:50/,/11-14 13:51/p' nts-pims-padis-xl.out
 
 `sed -n 's/^/<h1>/;s/$/<\/h1>/p;q' rime.txt`
 
@@ -121,6 +121,89 @@ THE RIME OF THE ANCYENT MARINERE, IN SEVEN PARTS.
 259
 [root@vultr ~]# sed -nE '/\b(the|The|THE)\b/p' rime.txt | wc -l
 259
+```
+
+### sed常用命令
+
+#### a和i命令
+
+a: append
+
+i: insert
+
+用法：
+
+`sed '1 i insert first line' test.txt`
+
+```console
+[root@vultr ~]# sed '1 i insert first line' test.txt 
+insert first line
+1
+2
+3
+4
+5
+```
+
+`sed '$ a append last line' test.txt`
+
+```console
+[root@vultr ~]# sed '$ a append last line' test.txt
+1
+2
+3
+4
+5
+append last line
+```
+
+结合匹配的结果进行插入或追加
+
+```console
+[root@vultr ~]# sed '/line 2/ i insert before 2' test.txt
+line 1
+insert before 2
+line 2
+line 3
+line 4
+line 5
+```
+
+#### c命令
+
+c命令是替换匹配行
+
+```console
+[root@vultr ~]# sed '/line 2/ c change line 2' test.txt
+line 1
+change line 2
+line 3
+line 4
+line 5
+```
+
+#### d命令
+
+d命令是删除目标
+
+```console
+[root@vultr ~]# sed '/line 2/ d' test.txt
+line 1
+line 3
+line 4
+line 5
+```
+
+#### p命令
+
+p命令是打印目标，可以类似grep的用法
+
+```console
+匹配两个模式line 2到line 4的记录
+[root@vultr ~]# sed -n '/line 2/,/line 4/p' test.txt
+line 2
+line 3
+line 4
 ```
 
 ### sed后向引用
