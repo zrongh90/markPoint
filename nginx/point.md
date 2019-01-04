@@ -1,5 +1,7 @@
 # IP直接返回
 
+## 通过IP匹配
+
 在nginx的配置文件nginx.conf中添加判断逻辑针对访问的IP进行默认的返回。
 
 配置策略`$remote_addr ~ (66.42.81.47|45.77.26.164)`
@@ -32,3 +34,23 @@ server {
     - `(remote_addr)(.*)(\)\))` 分别匹配三个不同的捕获分组remote_addr/remote_addr后到两个括号前的内容/两个括号
     - `\1\2|45.77.26.164\3` 后向引用打印捕获分组，并在捕获分组2和3之间添加需要新增的IP
     - 使用-i参数就地更新文件
+
+## 通过map进行匹配
+
+[doc](https://tengine.taobao.org/nginx_docs/cn/docs/http/ngx_http_map_module.html#map)
+
+```conf
+http {
+     map $remote_addr $allowed {
+        default allow;
+        66.42.81.47 deny;
+        45.77.26.164 deny;
+    }
+    server {
+        ...
+        if ( $allowed = 'deny') {
+            return 401;
+        }
+
+    }
+}
