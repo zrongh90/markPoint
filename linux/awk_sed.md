@@ -1,4 +1,4 @@
-# awk && sed 
+# awk && sed
 
 ## awk
 
@@ -35,50 +35,43 @@ BEGIN { recordC = 0 }
 END { recordC = FNR ; print recordC }'
 ```
 
-#以/为分割符，打印最后一个记录
+- 以/为分割符，打印最后一个记录
 
-awk 'BEGIN { FS="/" } { print $(NF) }'
+      awk 'BEGIN { FS="/" } { print $(NF) }'
 
-#以" "为分割符，循环结果，打印满足条件的字段
+- 以" "为分割符，循环结果，打印满足条件的字段
 
-awk '{for(i=1;i<NF;i++) {if($i ~ "Xmx" || $i ~ "wasserver" || $i ~ "wasprofile") print $i}}'
+      awk '{for(i=1;i<NF;i++) {if($i ~ "Xmx" || $i ~ "wasserver" || $i ~ "wasprofile") print $i}}'
 
-#循环将每行的结果相加
+- 循环将每行的结果相加
 
-awk 'BEGIN{total=0}{for(i=1;i<=NF;i++) total=total+$i} END{print total}'
+      awk 'BEGIN{total=0}{for(i=1;i<=NF;i++) total=total+$i} END{print total}'
 
 ### 打印bin目录下suid为true的二进制文件列表
 
 首先通过grep获取类型为file的项目，然后通过awk -F ''将字符逐个拆开，打印满足第四个字符为s的行的信息。
-要知道，这是个笨方法，最好的方式是通过find指定perm去查找
+要知道，这是个笨方法，最好的方式是通过find指定perm去查找，如下：
+
+      find /bin -perm -4000 -type f -exec ls -lrt '{}' \;
+
+引申以下find命令perm特性：
+
+      -perm [-]mode
+      -perm 750: 准确匹配750的权限
+      -perm -750: 所有者必须具有读写执行、组用户必须具有读执行，其他用户权限不限制
+      -perm /750：所有者具有读写执行任一权限、组用户具有读执行任一权限，其他用户权限不控制
+
+      SUID和SGID对应的权限为4和2，所以通过-perm -4000可以查找目录下的SUID位为4的目标
 
 ```console
 [root@vultr tmp]# ls -lrt /bin/ | grep ^- |  awk -F ''  'BEGIN{suid="s"}{if($4==suid)print $0}'
 -rwsr-xr-x. 1 root root      27832 Jun 10  2014 passwd
--rwsr-xr-x. 1 root root      41776 Nov  5  2016 newgrp
--rwsr-xr-x. 1 root root      78216 Nov  5  2016 gpasswd
--rwsr-xr-x. 1 root root      64240 Nov  5  2016 chage
--rwsr-xr-x. 1 root root     155000 Aug  3  2017 netstat
--rwsr-xr-x. 1 root root      27680 Apr 11  2018 pkexec
--rwsr-xr-x. 1 root root      57576 Apr 11  2018 crontab
----s--x--x. 1 root root     143248 Jun 27 18:03 sudo
--rwsr-xr-x. 1 root root      32048 Aug 16 18:47 umount
--rwsr-xr-x. 1 root root      32184 Aug 16 18:47 su
--rwsr-xr-x. 1 root root      44320 Aug 16 18:47 mount
+...
 -rws--x--x. 1 root root      23960 Aug 16 18:47 chsh
 -rws--x--x. 1 root root      24048 Aug 16 18:47 chfn
 [root@vultr etc]# find /bin/ -perm -4000 -exec ls -lrt '{}' \;
 -rwsr-xr-x. 1 root root 64240 Nov  5  2016 /bin/chage
--rws--x--x. 1 root root 24048 Aug 16 18:47 /bin/chfn
--rwsr-xr-x. 1 root root 41776 Nov  5  2016 /bin/newgrp
--rwsr-xr-x. 1 root root 27832 Jun 10  2014 /bin/passwd
--rwsr-xr-x. 1 root root 44320 Aug 16 18:47 /bin/mount
--rwsr-xr-x. 1 root root 78216 Nov  5  2016 /bin/gpasswd
--rwsr-xr-x. 1 root root 27680 Apr 11  2018 /bin/pkexec
----s--x--x. 1 root root 143248 Jun 27 18:03 /bin/sudo
--rwsr-xr-x. 1 root root 32184 Aug 16 18:47 /bin/su
--rws--x--x. 1 root root 23960 Aug 16 18:47 /bin/chsh
--rwsr-xr-x. 1 root root 32048 Aug 16 18:47 /bin/umount
+...
 -rwsr-xr-x. 1 root root 155000 Aug  3  2017 /bin/netstat
 -rwsr-xr-x. 1 root root 57576 Apr 11  2018 /bin/crontab
 ```

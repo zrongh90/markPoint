@@ -37,7 +37,9 @@ server {
 
 ## 通过map进行匹配
 
-[doc](https://tengine.taobao.org/nginx_docs/cn/docs/http/ngx_http_map_module.html#map)
+通过在http段定义map规则，在server段匹配IP与规则，遇到符合的规则进行默认过滤
+
+参考文档[doc](https://tengine.taobao.org/nginx_docs/cn/docs/http/ngx_http_map_module.html#map)
 
 ```conf
 http {
