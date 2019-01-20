@@ -80,7 +80,7 @@ END { recordC = FNR ; print recordC }'
 
 `sed [-n][-e script]...[-f script_file]...[file...]`
 
-截取某个时间段的日志
+截取某个时间段的日志,匹配模式1 11-14 13:50 到模式2 11-14 13:51之间的记录并打印
 
 sed -n '/11-14 13:50/,/11-14 13:51/p' nts-pims-padis-xl.out
 
