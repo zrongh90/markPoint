@@ -1,5 +1,13 @@
 # 系统性能分析类
 
+sysstat包提供以下三个常用分析工具：
+
+sar: 系统性能整体监控
+
+pidstat: 进程占用资源情况
+
+iostat: 磁盘IO性能情况
+
 ## sar分析系统性能
 
 sar由sysstat rpm包提供，如果系统不自带，可通过`yum install sysstat`安装
@@ -8,7 +16,7 @@ sar由sysstat rpm包提供，如果系统不自带，可通过`yum install sysst
 
 - sar -u看利用率
 
-<img src='../pics/sar_u.png'>
+![sar_u](../pics/sar_u.png)
 
 - sar -q看队列
 
@@ -16,7 +24,7 @@ sar由sysstat rpm包提供，如果系统不自带，可通过`yum install sysst
 >
 >ldavg-1/5/15：1/5/15分钟负载
 
-<img src='../pics/sar_q.png'>
+![sar_q](../pics/sar_q.png)
 
 ### 怀疑内存
 
@@ -30,11 +38,12 @@ sar由sysstat rpm包提供，如果系统不自带，可通过`yum install sysst
 >
 >pswpout：系统换出swap页面数
 
-<img src='../pics/sar_b.png'>
+![sar_b](../pics/sar_b.png)
 
 ### 怀疑IO
 
 - sar -b IO设备信息, sar -u , sar -d看磁盘
+
 >svctm: 平均每次IO请求的处理时间(毫秒为单位)
 >
 >await:平均每次IO请求的等待时间（包括等待和处理，毫秒为单位）
