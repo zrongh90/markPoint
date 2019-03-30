@@ -95,7 +95,7 @@ sed -n '/11-14 13:50/,/11-14 13:51/p' nts-pims-padis-xl.out
 - `q`完成前面script定义的操作后退出
 
 ```console
-[root@vultr ~]# head -1 rime.txt 
+[root@vultr ~]# head -1 rime.txt
 THE RIME OF THE ANCYENT MARINERE, IN SEVEN PARTS.
 [root@vultr ~]# sed -n 's/^/<h1>/;s/$/<\/h1>/p;q' rime.txt 
 <h1>THE RIME OF THE ANCYENT MARINERE, IN SEVEN PARTS.</h1>

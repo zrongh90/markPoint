@@ -48,7 +48,9 @@ open("/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
 13:15:54.485440 open("/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
 ...
 ```
+
 - -r 给出syscall的相对时间
+
 ```console
 [root@vultr ~]# strace -r ls
      0.000000 execve("/usr/bin/ls", ["ls"], [/* 24 vars */]) = 0
@@ -93,6 +95,21 @@ strace: Process 16321 attached
 ```
 
 ## 例子
+
+### 分析程序调用配置文件情况
+
+例如启动supervisor时，如果未通过-c去指定配置路径，应用会在指定目录查找supervisor的配置文件supervisord.conf（默认文件可通过echo_supervisord_config生成）
+
+```console
+[root@master ~]# strace -o supervisor.strace supervisord
+[root@master ~]# cat supervisor.strace | grep supervisord.conf
+stat("/usr/etc/supervisord.conf", 0x7fffcde24070) = -1 ENOENT (No such file or directory)
+stat("/usr/supervisord.conf", 0x7fffcde24070) = -1 ENOENT (No such file or directory)
+stat("supervisord.conf", 0x7fffcde24070) = -1 ENOENT (No such file or directory)
+stat("etc/supervisord.conf", 0x7fffcde24070) = -1 ENOENT (No such file or directory)
+stat("/etc/supervisord.conf", 0x7fffcde24070) = -1 ENOENT (No such file or directory)
+stat("/etc/supervisor/supervisord.conf", {st_mode=S_IFREG|0644, st_size=9165, ...}) = 0
+```
 
 ### 分析进程异常退出原因
 
