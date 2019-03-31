@@ -32,3 +32,41 @@ load_dotenv(os.path.join(basedir, '.env'))
 ## 数据库类
 
 ### peewee
+
+## 认证类
+
+### [itsdangrous](https://pythonhosted.org/itsdangerous/)
+
+Given a key only you know, you can cryptographically sign your data and hand it over to someone else. When you get the data back you can easily ensure that nobody tampered with it.
+
+#### 签名
+
+- Signer
+- TimestampSigner
+
+#### 序列化
+
+- 不带超时时间：
+  - URLSafeSerializer
+  - JSONWebSignatureSerializer
+
+- 带超时时间
+  - URLSafeTimedSerializer
+  - TimedJSONWebSignatureSerializer
+
+#### 异常
+
+- BadSignature
+- SignatureExpired
+
+#### 用法
+
+```python
+from itsdangerous import URLSafeSerializer
+secert_key = 'you_secert_key'
+s = URLSafeSerializer(secert_key)
+res.dumps(40)
+Out[23]: 'NDA.j_6pYeAR-uDtZRoLhLPwpP7oI90'
+res.loads('NDA.j_6pYeAR-uDtZRoLhLPwpP7oI90')
+Out[24]: 40
+```

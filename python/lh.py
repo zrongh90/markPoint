@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from datetime import datetime
 
 s = pd.Series([i for i in range(5)], index=['a','b','c','d', 'e'])
 
